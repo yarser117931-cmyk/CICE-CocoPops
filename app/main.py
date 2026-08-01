@@ -115,6 +115,7 @@ async def dashboard() -> dict[str, Any]:
 
     product_ids = [int(p["id"]) for p in finished_products]
     quants = []
+    orderpoints = []
     if product_ids:
         quants = await odoo_call(
             "stock.quant",
@@ -135,6 +136,24 @@ async def dashboard() -> dict[str, Any]:
             },
         )
 
+        orderpoints = await odoo_call(
+            "stock.warehouse.orderpoint",
+            "search_read",
+            {
+                "domain": [
+                    ["product_id", "in", product_ids],
+                    ["active", "=", True],
+                ],
+                "fields": [
+                    "product_id",
+                    "product_min_qty",
+                    "product_max_qty",
+                    "location_id",
+                ],
+                "limit": 20000,
+            },
+        )
+
     inventory: dict[int, dict[str, Any]] = {}
     for product in finished_products:
         pid = int(product["id"])
@@ -147,6 +166,9 @@ async def dashboard() -> dict[str, Any]:
             "quantity": 0.0,
             "reserved": 0.0,
             "available": 0.0,
+            "minimum": 0.0,
+            "coverage_pct": None,
+            "status": "SIN_MINIMO",
         }
 
     for quant in quants:
@@ -161,16 +183,43 @@ async def dashboard() -> dict[str, Any]:
             inventory[pid]["reserved"] += reserved
             inventory[pid]["available"] += float(available)
 
+    for orderpoint in orderpoints:
+        pid = relation_id(orderpoint.get("product_id"))
+        if pid in inventory:
+            inventory[pid]["minimum"] += float(orderpoint.get("product_min_qty") or 0)
+
+    for item in inventory.values():
+        minimum = item["minimum"]
+        available = item["available"]
+        if minimum <= 0:
+            item["coverage_pct"] = None
+            item["status"] = "SIN_MINIMO"
+        else:
+            coverage = round((available / minimum) * 100, 1)
+            item["coverage_pct"] = coverage
+            if available <= 0 or coverage < 50:
+                item["status"] = "CRITICO"
+            elif coverage < 100:
+                item["status"] = "BAJO_MINIMO"
+            elif coverage < 120:
+                item["status"] = "EN_RIESGO"
+            else:
+                item["status"] = "SALUDABLE"
+
+    priority = {"CRITICO": 0, "BAJO_MINIMO": 1, "EN_RIESGO": 2, "SALUDABLE": 3, "SIN_MINIMO": 4}
     inventory_items = sorted(
         inventory.values(),
-        key=lambda item: (item["available"], item["name"]),
+        key=lambda item: (priority[item["status"]], item["coverage_pct"] if item["coverage_pct"] is not None else 999999, item["name"]),
     )
+    comparable = [item for item in inventory_items if item["minimum"] > 0]
     total_available = round(sum(i["available"] for i in inventory_items), 2)
-    out_of_stock = sum(1 for i in inventory_items if i["available"] <= 0)
-    low_stock = sum(
-        1 for i in inventory_items
-        if 0 < i["available"] <= LOW_STOCK_THRESHOLD
-    )
+    total_minimum = round(sum(i["minimum"] for i in comparable), 2)
+    global_coverage = round((total_available / total_minimum) * 100, 1) if total_minimum else None
+    critical_count = sum(1 for i in comparable if i["status"] == "CRITICO")
+    below_count = sum(1 for i in comparable if i["status"] == "BAJO_MINIMO")
+    risk_count = sum(1 for i in comparable if i["status"] == "EN_RIESGO")
+    healthy_count = sum(1 for i in comparable if i["status"] == "SALUDABLE")
+    without_minimum = sum(1 for i in inventory_items if i["status"] == "SIN_MINIMO")
 
     manufacturing = await odoo_call(
         "mrp.production",
@@ -271,10 +320,16 @@ async def dashboard() -> dict[str, Any]:
         "source": {"url": ODOO_URL, "database": ODOO_DATABASE},
         "inventory": {
             "total_available": total_available,
+            "total_minimum": total_minimum,
+            "global_coverage_pct": global_coverage,
             "products": len(inventory_items),
-            "out_of_stock": out_of_stock,
-            "low_stock": low_stock,
-            "critical": inventory_items[:10],
+            "products_with_minimum": len(comparable),
+            "critical_count": critical_count,
+            "below_minimum_count": below_count,
+            "at_risk_count": risk_count,
+            "healthy_count": healthy_count,
+            "without_minimum_count": without_minimum,
+            "priority": inventory_items[:12],
         },
         "production": {
             "orders": len(manufacturing),

@@ -10,7 +10,7 @@
 .wrap{max-width:1180px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:13px}.logo{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#7c3aed,#ec4899);display:grid;place-items:center;color:white;font-weight:900}
 h1{margin:0;font-size:clamp(25px,4vw,35px)}.muted{color:var(--muted)}.stamp,.card{background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(31,41,55,.07)}
-.stamp{padding:12px 15px;border-radius:15px;text-align:right}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stamp{padding:12px 15px;border-radius:15px;text-align:right}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .card{padding:22px;border-radius:22px}.row{display:flex;justify-content:space-between;gap:12px}.eyebrow{text-transform:uppercase;letter-spacing:.1em;font-size:12px;font-weight:800;color:var(--muted)}
 .big{font-size:clamp(38px,6vw,54px);font-weight:900;letter-spacing:-.05em;margin:8px 0 2px}.pill{padding:6px 10px;border-radius:99px;font-size:12px;font-weight:800}
 .ok{background:#dcfce7;color:#166534}.warn{background:#ffedd5;color:#9a3412}.bad{background:#fee2e2;color:#991b1b}.mini{margin-top:17px}.mini div{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:10px 0;font-size:14px}
@@ -26,12 +26,13 @@ h1{margin:0;font-size:clamp(25px,4vw,35px)}.muted{color:var(--muted)}.stamp,.car
 <div id="status" class="card loading">Conectando con Odoo…</div>
 <div id="dashboard" hidden>
 <section class="grid">
-<article class="card"><div class="row"><div class="eyebrow">Inventario terminado</div><span id="invPill" class="pill"></span></div><div class="big" id="invTotal">0</div><div class="muted">unidades disponibles</div><div class="mini"><div><span>Productos incluidos</span><b id="invProducts"></b></div><div><span>Agotados</span><b id="invOut"></b></div><div><span>Inventario bajo</span><b id="invLow"></b></div></div></article>
-<article class="card"><div class="row"><div class="eyebrow">Producción del día</div><span id="prodPill" class="pill warn"></span></div><div class="big" id="prodProgress">0%</div><div class="muted">avance terminado</div><div class="progress"><div class="bar" id="prodBar"></div></div><div class="mini"><div><span>Órdenes</span><b id="prodOrders"></b></div><div><span>Planeado</span><b id="prodPlanned"></b></div><div><span>Terminado</span><b id="prodDone"></b></div></div></article>
+<article class="card"><div class="row"><div class="eyebrow">Cobertura de stock</div><span id="coveragePill" class="pill"></span></div><div class="big" id="coverage">—</div><div class="muted">Disponible contra stock mínimo</div><div class="progress"><div class="bar" id="coverageBar"></div></div><div class="mini"><div><span>Stock mínimo total</span><b id="minimumTotal"></b></div><div><span>Productos con mínimo</span><b id="withMinimum"></b></div></div></article>
+<article class="card"><div class="row"><div class="eyebrow">Inventario disponible</div><span class="pill ok">Para venta</span></div><div class="big" id="invTotal">0</div><div class="muted">existencia libre después de reservas</div><div class="mini"><div><span>Productos incluidos</span><b id="invProducts"></b></div><div><span>Sin mínimo configurado</span><b id="withoutMinimum"></b></div></div></article>
+<article class="card"><div class="row"><div class="eyebrow">Riesgo de inventario</div><span id="riskPill" class="pill bad"></span></div><div class="big" id="criticalCount">0</div><div class="muted">productos críticos</div><div class="mini"><div><span>Bajo mínimo</span><b id="belowCount"></b></div><div><span>En riesgo</span><b id="riskCount"></b></div><div><span>Saludables</span><b id="healthyCount"></b></div></div></article>
 <article class="card"><div class="row"><div class="eyebrow">Ventas del día</div><span class="pill ok">Confirmadas</span></div><div class="big" id="salesTotal">$0</div><div class="muted">pedidos confirmados hoy</div><div class="mini"><div><span>Pedidos</span><b id="salesOrders"></b></div><div><span>Clientes</span><b id="salesCustomers"></b></div><div><span>Facturado hoy</span><b id="invoiced"></b></div><div><span>Pendiente de facturar</span><b id="pending"></b></div></div></article>
 </section>
 <section class="section">
-<article class="card"><div class="eyebrow">Atención inmediata</div><h2>Inventario crítico</h2><table><thead><tr><th>Producto</th><th>Categoría</th><th>Disponible</th></tr></thead><tbody id="critical"></tbody></table></article>
+<article class="card"><div class="eyebrow">Atención inmediata</div><h2>Existencia vs stock mínimo</h2><table><thead><tr><th>Producto</th><th>Disponible</th><th>Mínimo</th><th>Cobertura</th><th>Estado</th></tr></thead><tbody id="critical"></tbody></table></article>
 <article class="card"><div class="eyebrow">Lectura ejecutiva</div><h2>Resumen automático</h2><div id="summary" style="line-height:1.7"></div><button onclick="loadData()">Actualizar ahora</button></article>
 </section>
 </div>
@@ -46,18 +47,20 @@ async function loadData(){
   const d=await r.json();
   if(!r.ok) throw new Error(d.detail||'No fue posible consultar Odoo.');
   updated.textContent=new Date(d.generated_at).toLocaleString('es-MX');
-  invTotal.textContent=num(d.inventory.total_available); invProducts.textContent=d.inventory.products; invOut.textContent=d.inventory.out_of_stock; invLow.textContent=d.inventory.low_stock;
-  invPill.textContent=(d.inventory.out_of_stock+d.inventory.low_stock)+' alertas'; invPill.className='pill '+(d.inventory.out_of_stock?'bad':d.inventory.low_stock?'warn':'ok');
-  prodProgress.textContent=num(d.production.progress)+'%'; prodBar.style.width=Math.min(100,d.production.progress)+'%'; prodOrders.textContent=d.production.orders; prodPlanned.textContent=num(d.production.planned); prodDone.textContent=num(d.production.done); prodPill.textContent=d.production.orders?'En proceso':'Sin órdenes';
+  const c=d.inventory.global_coverage_pct;
+  coverage.textContent=c===null?'—':num(c)+'%';
+  minimumTotal.textContent=num(d.inventory.total_minimum); withMinimum.textContent=d.inventory.products_with_minimum;
+  coverageBar.style.width=Math.min(100,Math.max(0,c||0))+'%';
+  const cls=c===null?'warn':c<100?'bad':c<120?'warn':'ok'; coveragePill.className='pill '+cls; coveragePill.textContent=c===null?'Sin datos':c<100?'Bajo mínimo':c<120?'En riesgo':'Saludable';
+  invTotal.textContent=num(d.inventory.total_available); invProducts.textContent=d.inventory.products; withoutMinimum.textContent=d.inventory.without_minimum_count;
+  criticalCount.textContent=d.inventory.critical_count; belowCount.textContent=d.inventory.below_minimum_count; riskCount.textContent=d.inventory.at_risk_count; healthyCount.textContent=d.inventory.healthy_count; riskPill.textContent=(d.inventory.critical_count+d.inventory.below_minimum_count)+' por atender';
   salesTotal.textContent=money(d.sales.total); salesOrders.textContent=d.sales.orders; salesCustomers.textContent=d.sales.customers; invoiced.textContent=money(d.sales.invoiced_today); pending.textContent=money(d.sales.pending_invoice);
-  critical.innerHTML=d.inventory.critical.map(x=>`<tr><td>${x.name}</td><td>${x.category}</td><td>${num(x.available)} ${x.uom||''}</td></tr>`).join('')||'<tr><td colspan="3">Sin productos encontrados.</td></tr>';
-  const invStatus=d.inventory.out_of_stock?'requiere atención':d.inventory.low_stock?'presenta alertas preventivas':'se encuentra estable';
-  summary.innerHTML=`<p>El inventario terminado <b>${invStatus}</b>. Hay <b>${d.inventory.out_of_stock}</b> productos agotados y <b>${d.inventory.low_stock}</b> con existencia baja.</p><p>La producción registra <b>${d.production.orders}</b> órdenes hoy y un avance terminado de <b>${num(d.production.progress)}%</b>.</p><p>Las ventas confirmadas suman <b>${money(d.sales.total)}</b> en <b>${d.sales.orders}</b> pedidos. Se han facturado hoy <b>${money(d.sales.invoiced_today)}</b>.</p>`;
+  const label=s=>({CRITICO:'🔴 Crítico',BAJO_MINIMO:'🔴 Bajo mínimo',EN_RIESGO:'🟡 En riesgo',SALUDABLE:'🟢 Saludable',SIN_MINIMO:'⚪ Sin mínimo'}[s]||s);
+  critical.innerHTML=d.inventory.priority.map(x=>`<tr><td>${x.name}</td><td>${num(x.available)} ${x.uom||''}</td><td>${num(x.minimum)} ${x.uom||''}</td><td><b>${x.coverage_pct===null?'—':num(x.coverage_pct)+'%'}</b></td><td>${label(x.status)}</td></tr>`).join('')||'<tr><td colspan="5">Sin productos encontrados.</td></tr>';
+  const risk=d.inventory.critical_count>0?'ALTO':d.inventory.below_minimum_count>0||d.inventory.at_risk_count>0?'MEDIO':'BAJO';
+  summary.innerHTML=`<p>El riesgo de inventario es <b>${risk}</b>. La cobertura global disponible contra stock mínimo es <b>${c===null?'sin datos':num(c)+'%'}</b>.</p><p><b>${d.inventory.critical_count}</b> productos están críticos, <b>${d.inventory.below_minimum_count}</b> debajo del mínimo y <b>${d.inventory.at_risk_count}</b> cerca del límite.</p><p>La tabla está ordenada del producto más urgente al más saludable.</p>`;
   status.hidden=true; dashboard.hidden=false;
- }catch(e){
-  status.className='card error';
-  status.innerHTML='<b>No se pudo conectar.</b><br><br>'+e.message+'<br><br>Revisa la clave API y las variables del servidor.';
- }
+ }catch(e){status.className='card error';status.innerHTML='<b>No se pudo conectar.</b><br><br>'+e.message;}
 }
 loadData();
 setInterval(loadData,300000);
