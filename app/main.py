@@ -19,7 +19,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
-app = FastAPI(title="CICE Coco Pops", version="1.2.0")
+app = FastAPI(title="CICE Coco Pops", version="1.3.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 ODOO_URL = os.getenv("ODOO_URL", "https://cocopopsmx1.odoo.com").rstrip("/")
@@ -61,6 +61,30 @@ def relation_name(value: Any) -> str:
 
 def relation_id(value: Any) -> int | None:
     return int(value[0]) if isinstance(value, list) and value else None
+
+
+def executive_category(category_name: str) -> str:
+    """Agrupa subcategorías operativas en categorías ejecutivas.
+
+    Todo producto cuya ruta de categoría contenga FABRICACION/FABRICACIÓN
+    se presenta en el tablero inicial como una sola categoría:
+    FABRICACIÓN / INGREDIENTES.
+
+    La subcategoría original se conserva para la tabla de detalle.
+    """
+    normalized = (
+        category_name.upper()
+        .replace("Á", "A")
+        .replace("É", "E")
+        .replace("Í", "I")
+        .replace("Ó", "O")
+        .replace("Ú", "U")
+    )
+
+    if "FABRICACION" in normalized:
+        return "FABRICACIÓN / INGREDIENTES"
+
+    return category_name
 
 
 def product_status(available: float, minimum: float) -> tuple[str, float | None]:
@@ -122,7 +146,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, Any]:
     return {
         "status": "ok",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "odoo_url": ODOO_URL,
         "database": ODOO_DATABASE,
     }
@@ -197,12 +221,14 @@ async def dashboard() -> dict[str, Any]:
 
     for product in products:
         product_id = int(product["id"])
-        category = relation_name(product.get("categ_id")) or "Sin categoría"
+        original_category = relation_name(product.get("categ_id")) or "Sin categoría"
+        category = executive_category(original_category)
         inventory[product_id] = {
             "id": product_id,
             "name": product.get("name", ""),
             "code": product.get("default_code") or "",
             "category": category,
+            "original_category": original_category,
             "uom": relation_name(product.get("uom_id")),
             "on_hand": 0.0,
             "reserved": 0.0,
@@ -264,6 +290,7 @@ async def dashboard() -> dict[str, Any]:
         "BOTES DE HELADO": 2,
         "PASTELES": 3,
         "EMPAQUE Y PRESENTACIÓN": 4,
+        "FABRICACIÓN / INGREDIENTES": 5,
         "FABRICACION": 5,
         "FABRICACIÓN": 5,
         "LIMPIEZA": 6,

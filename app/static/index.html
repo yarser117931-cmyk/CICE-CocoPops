@@ -259,7 +259,7 @@ function renderProducts(){
   const products=DATA.inventory.products.filter(product=>{
     const categoryOk=selectedCategory==='TODOS'||product.category===selectedCategory;
     const stateOk=state==='TODOS'||product.status===state;
-    const text=(product.code+' '+product.name+' '+product.category).toLowerCase();
+    const text=(product.code+' '+product.name+' '+product.category+' '+(product.original_category||'')).toLowerCase();
     const searchOk=!search||text.includes(search);
     return categoryOk&&stateOk&&searchOk;
   });
@@ -269,7 +269,7 @@ function renderProducts(){
     return `<tr>
       <td>${product.code||'—'}</td>
       <td><b>${product.name}</b></td>
-      <td>${product.category}</td>
+      <td>${product.original_category||product.category}</td>
       <td class="num">${num(product.available)} ${product.uom||''}</td>
       <td class="num">${num(product.on_hand)} ${product.uom||''}</td>
       <td class="num">${num(product.reserved)} ${product.uom||''}</td>
