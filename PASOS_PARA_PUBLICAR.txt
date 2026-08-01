@@ -1,0 +1,28 @@
+CICE COCO POPS — PASOS PARA PUBLICAR
+======================================
+
+1. En GitHub, abre el repositorio CICE-CocoPops.
+2. Haz clic en "Añadir archivo" > "Cargar archivos".
+3. Descomprime este ZIP en tu computadora.
+4. Arrastra TODOS los archivos y carpetas del proyecto a GitHub.
+5. Confirma la carga con el botón verde al final.
+6. Regresa a Render.
+7. Selecciona el repositorio CICE-CocoPops.
+8. Configura:
+   - Build Command:
+     pip install -r requirements.txt
+   - Start Command:
+     uvicorn app.main:app --host 0.0.0.0 --port $PORT
+9. Agrega estas variables secretas en Render:
+   ODOO_URL=https://cocopopsmx1.odoo.com
+   ODOO_DATABASE=cocopopsmx1
+   ODOO_API_KEY=TU_CLAVE_API
+   TIMEZONE=America/Chihuahua
+   FINISHED_CATEGORY_KEYWORDS=PALETAS,NIEVE,HELADO,BOTES DE HELADO
+   LOW_STOCK_THRESHOLD=25
+10. Publica el servicio.
+
+IMPORTANTE:
+- No subas el archivo .env.
+- No escribas la clave API dentro del código.
+- No compartas la clave API por chat ni correo.

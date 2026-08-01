@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cice-coco-pops
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ODOO_URL
+        value: https://cocopopsmx1.odoo.com
+      - key: ODOO_DATABASE
+        value: cocopopsmx1
+      - key: ODOO_API_KEY
+        sync: false
+      - key: TIMEZONE
+        value: America/Chihuahua
+      - key: FINISHED_CATEGORY_KEYWORDS
+        value: PALETAS,NIEVE,HELADO,BOTES DE HELADO
+      - key: LOW_STOCK_THRESHOLD
+        value: "25"
