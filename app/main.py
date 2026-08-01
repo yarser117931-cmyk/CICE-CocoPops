@@ -19,7 +19,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
-app = FastAPI(title="CICE Coco Pops", version="1.3.0")
+app = FastAPI(title="CICE Coco Pops", version="2.0.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 ODOO_URL = os.getenv("ODOO_URL", "https://cocopopsmx1.odoo.com").rstrip("/")
@@ -146,7 +146,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, Any]:
     return {
         "status": "ok",
-        "version": "1.3.0",
+        "version": "2.0.0",
         "odoo_url": ODOO_URL,
         "database": ODOO_DATABASE,
     }
@@ -405,6 +405,67 @@ async def dashboard() -> dict[str, Any]:
         },
     )
 
+    # Centro de alertas ejecutivo.
+    alerts: list[dict[str, Any]] = []
+
+    for item in items:
+        if item["status"] == "CRITICO":
+            alerts.append({
+                "level": "CRITICO",
+                "title": item["name"],
+                "message": (
+                    f"Disponible {round(item['available'], 2)} "
+                    f"contra mínimo {round(item['minimum'], 2)}."
+                ),
+                "category": item["category"],
+            })
+        elif item["status"] == "BAJO_MINIMO":
+            alerts.append({
+                "level": "IMPORTANTE",
+                "title": item["name"],
+                "message": (
+                    f"Está por debajo del mínimo por "
+                    f"{round(item['missing_to_minimum'], 2)} {item['uom']}."
+                ),
+                "category": item["category"],
+            })
+
+    alerts = alerts[:20]
+
+    global_coverage = global_summary["coverage_pct"]
+    if global_coverage is None:
+        company_status = "SIN_DATOS"
+    elif global_coverage < 80 or global_summary["critical"] > 0:
+        company_status = "CRITICO"
+    elif global_coverage < 100 or global_summary["below_minimum"] > 0:
+        company_status = "ATENCION"
+    else:
+        company_status = "ESTABLE"
+
+    executive_summary = {
+        "company_status": company_status,
+        "headline": (
+            "La empresa requiere atención inmediata en inventarios."
+            if company_status == "CRITICO"
+            else "La operación presenta alertas que deben revisarse hoy."
+            if company_status == "ATENCION"
+            else "La operación se encuentra estable."
+        ),
+        "inventory_message": (
+            f"{global_summary['critical']} productos críticos, "
+            f"{global_summary['below_minimum']} bajo mínimo y "
+            f"{global_summary['at_risk']} en riesgo."
+        ),
+        "production_message": (
+            f"{len(manufacturing)} órdenes de fabricación hoy con "
+            f"{production_progress}% de avance terminado."
+        ),
+        "sales_message": (
+            f"Ventas confirmadas por {round(sales_total, 2)} en "
+            f"{len(sales)} pedidos."
+        ),
+    }
+
     return {
         "generated_at": now.isoformat(),
         "source": {"url": ODOO_URL, "database": ODOO_DATABASE},
@@ -427,4 +488,6 @@ async def dashboard() -> dict[str, Any]:
                 sum(float(item.get("amount_total") or 0) for item in invoices), 2
             ),
         },
+        "alerts": alerts,
+        "executive_summary": executive_summary,
     }
