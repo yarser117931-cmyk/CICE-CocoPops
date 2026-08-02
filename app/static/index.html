@@ -95,7 +95,7 @@ td.num,th.num{text-align:right}
 
   <main class="main">
     <div class="top">
-      <div><h1 id="pageTitle">Centro de Inteligencia Ejecutiva</h1><div class="muted">Información estratégica para la toma de decisiones</div></div>
+      <div><h1 id="pageTitle">Centro de Inteligencia Empresarial</h1><div class="muted">Información operativa y estratégica para Dirección General</div></div>
       <div class="stamp"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:#22c55e;display:inline-block"></span><b>Odoo sincronizado</b></div><span id="updated">Actualizando…</span></div>
     </div>
 
@@ -255,7 +255,7 @@ function openModule(module){
   ['home','inventory','production','sales','alerts'].forEach(name=>{
     document.getElementById(name+'View').classList.toggle('hidden',name!==module);
   });
-  const titles={home:'Centro de Inteligencia Ejecutiva',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
+  const titles={home:'Centro de Inteligencia Empresarial',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
   pageTitle.textContent=titles[module];
   document.querySelectorAll('.nav-btn[data-module]').forEach(b=>b.classList.toggle('active',b.dataset.module===module));
 }
