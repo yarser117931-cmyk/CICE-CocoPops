@@ -1,0 +1,34 @@
+CICE 12.1 — PORTADA EJECUTIVA COMPACTA
+========================================
+
+CAMBIOS
+-------
+- Se elimina el logotipo duplicado dentro de la imagen principal.
+- El logotipo real permanece únicamente en el menú lateral.
+- La frase se hace más compacta.
+- Se agrega: “Inteligencia para decisiones que hacen crecer a Coco Pops”.
+- Los valores de marca y los cinco indicadores se ven al abrir CICE.
+- Se reduce el desplazamiento vertical en PC.
+- Se optimiza la composición para móvil.
+- Se conserva toda la funcionalidad de Odoo.
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Compactar portada ejecutiva CICE 12.1
+4. Commit to main.
+5. Push origin.
+6. Espera Deploy live en Render.
+
+DESPUÉS
+-------
+Abre una sola vez:
+https://cice-cocopops.onrender.com/actualizar-cice
+
+Verifica en:
+https://cice-cocopops.onrender.com/api/health
+
+Debe mostrar:
+"version": "12.1.0"

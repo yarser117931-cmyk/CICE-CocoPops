@@ -40,7 +40,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="12.0.1",
+    version="12.1.0",
 )
 
 app.mount(
@@ -109,7 +109,7 @@ async def actualizar_cice() -> HTMLResponse:
         localStorage.removeItem('cice-version');
         sessionStorage.clear();
       } finally {
-        location.replace('/?version=12.0.1&actualizado=' + Date.now());
+        location.replace('/?version=12.1.0&actualizado=' + Date.now());
       }
     })();
   </script>
@@ -127,7 +127,7 @@ async def actualizar_cice() -> HTMLResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "12.0.1",
+        "version": "12.1.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
