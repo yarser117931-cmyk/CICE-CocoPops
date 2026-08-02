@@ -1,7 +1,6 @@
 
 from __future__ import annotations
 
-import asyncio
 from collections import defaultdict
 from typing import Any
 
@@ -101,43 +100,42 @@ async def build_inventory(
     orderpoints = []
 
     if product_ids:
-        quants, orderpoints = await asyncio.gather(
-            client.call(
-                "stock.quant",
-                "search_read",
-                {
-                    "domain": [
-                        ["product_id", "in", product_ids],
-                        ["location_id.usage", "=", "internal"],
-                    ],
-                    "fields": [
-                        "product_id",
-                        "quantity",
-                        "reserved_quantity",
-                        "available_quantity",
-                        "location_id",
-                    ],
-                    "limit": 50000,
-                },
-            ),
-            client.call(
-                "stock.warehouse.orderpoint",
-                "search_read",
-                {
-                    "domain": [
-                        ["product_id", "in", product_ids],
-                        ["active", "=", True],
-                    ],
-                    "fields": [
-                        "product_id",
-                        "product_min_qty",
-                        "product_max_qty",
-                        "location_id",
-                        "warehouse_id",
-                    ],
-                    "limit": 50000,
-                },
-            ),
+        quants = await client.call(
+            "stock.quant",
+            "search_read",
+            {
+                "domain": [
+                    ["product_id", "in", product_ids],
+                    ["location_id.usage", "=", "internal"],
+                ],
+                "fields": [
+                    "product_id",
+                    "quantity",
+                    "reserved_quantity",
+                    "available_quantity",
+                    "location_id",
+                ],
+                "limit": 50000,
+            },
+        )
+
+        orderpoints = await client.call(
+            "stock.warehouse.orderpoint",
+            "search_read",
+            {
+                "domain": [
+                    ["product_id", "in", product_ids],
+                    ["active", "=", True],
+                ],
+                "fields": [
+                    "product_id",
+                    "product_min_qty",
+                    "product_max_qty",
+                    "location_id",
+                    "warehouse_id",
+                ],
+                "limit": 50000,
+            },
         )
 
     inventory: dict[int, dict[str, Any]] = {}

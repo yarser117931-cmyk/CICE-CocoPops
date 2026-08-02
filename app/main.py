@@ -1,60 +1,59 @@
+
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
+from datetime import datetime, timedelta
+from time import perf_counter
 from pathlib import Path
-from typing import Annotated
+from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
-from fastapi import Body, FastAPI, Query
+from fastapi import FastAPI
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
 
 from app.config import Settings
-from app.database import database_enabled, initialize_database
 from app.odoo import OdooClient
+from app.database import database_enabled, initialize_database
+from app.services.history import capture_snapshot, trends
+from app.services.intelligence import build_intelligence
+from app.services.inventory import build_inventory
+from app.services.production import build_production
+from app.services.priorities import build_ceo_priorities
 from app.services.copilot import answer_question
-from app.services.dashboard import DashboardService
-from app.services.history import trends
+from app.services.sales import build_sales
 from app.services.warehouse import (
     executive_history,
     export_executive_csv,
     initialize_warehouse,
     inventory_history,
+    save_warehouse_snapshot,
     warehouse_enabled,
 )
-from app.version import APP_VERSION
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
+
 settings = Settings.from_env()
 odoo = OdooClient(settings)
-dashboard_service = DashboardService(settings, odoo)
-
-
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    initialize_database()
-    initialize_warehouse()
-    await odoo.start()
-    try:
-        yield
-    finally:
-        await odoo.close()
-
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version=APP_VERSION,
-    lifespan=lifespan,
+    version="10.2.0",
 )
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+app.mount(
+    "/static",
+    StaticFiles(directory=STATIC_DIR),
+    name="static",
+)
 
 
-class CopilotRequest(BaseModel):
-    question: str = Field(min_length=1, max_length=500)
+@app.on_event("startup")
+async def startup() -> None:
+    initialize_database()
+    initialize_warehouse()
 
 
 @app.get("/")
@@ -66,46 +65,28 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": APP_VERSION,
-        "architecture": "enterprise-consolidated",
+        "version": "10.2.0",
+        "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
-        "odoo_configured": bool(settings.odoo_api_key),
+        "odoo_url": settings.odoo_url,
+        "database": settings.odoo_database,
     }
 
 
-@app.get("/api/dashboard")
-async def dashboard(
-    refresh: Annotated[bool, Query(description="Ignora el caché temporal")] = False,
-) -> dict[str, object]:
-    return await dashboard_service.get_snapshot(force=refresh)
-
-
-@app.post("/api/copilot")
-async def copilot(payload: Annotated[CopilotRequest, Body()]) -> dict[str, object]:
-    snapshot = await dashboard_service.get_snapshot()
-    return answer_question(
-        payload.question,
-        snapshot["inventory"],
-        snapshot["production"],
-        snapshot["sales"],
-        snapshot["ceo_priorities"],
-    )
-
-
 @app.get("/api/trends")
-async def get_trends(
-    days: Annotated[int, Query(ge=1, le=365)] = 30,
-) -> dict[str, object]:
+async def get_trends(days: int = 30) -> dict[str, object]:
     return trends(days)
 
 
-@app.get("/api/history/summary")
-async def history_summary(
+
+
+def build_historical_summary(
     category: str = "TODOS",
-    days: Annotated[int, Query(ge=1, le=365)] = 30,
+    days: int = 30,
 ) -> dict[str, object]:
     points = executive_history(category=category, days=days)
+
     if not points:
         return {
             "enabled": warehouse_enabled(),
@@ -122,23 +103,41 @@ async def history_summary(
             },
         }
 
-    first, last = points[0], points[-1]
+    first = points[0]
+    last = points[-1]
+
     first_coverage = first.get("coverage_pct")
     last_coverage = last.get("coverage_pct")
-    coverage_change = (
-        round(float(last_coverage) - float(first_coverage), 1)
-        if first_coverage is not None and last_coverage is not None
-        else None
-    )
+
+    coverage_change = None
+    if first_coverage is not None and last_coverage is not None:
+        coverage_change = round(last_coverage - first_coverage, 1)
+
     critical_change = int(last.get("critical") or 0) - int(first.get("critical") or 0)
-    trend = "SIN_DATOS"
-    if coverage_change is not None:
-        if coverage_change > 3 and critical_change <= 0:
-            trend = "MEJORA"
-        elif coverage_change < -3 or critical_change > 0:
-            trend = "DETERIORO"
-        else:
-            trend = "ESTABLE"
+    available_change = round(
+        float(last.get("available") or 0)
+        - float(first.get("available") or 0),
+        2,
+    )
+    sales_change = round(
+        float(last.get("sales_total") or 0)
+        - float(first.get("sales_total") or 0),
+        2,
+    )
+    production_change = round(
+        float(last.get("production_progress") or 0)
+        - float(first.get("production_progress") or 0),
+        1,
+    )
+
+    if coverage_change is None:
+        trend = "SIN_DATOS"
+    elif coverage_change > 3 and critical_change <= 0:
+        trend = "MEJORA"
+    elif coverage_change < -3 or critical_change > 0:
+        trend = "DETERIORO"
+    else:
+        trend = "ESTABLE"
 
     return {
         "enabled": warehouse_enabled(),
@@ -147,19 +146,28 @@ async def history_summary(
         "points": points,
         "summary": {
             "coverage_change": coverage_change,
-            "available_change": round(float(last.get("available") or 0) - float(first.get("available") or 0), 2),
+            "available_change": available_change,
             "critical_change": critical_change,
-            "sales_change": round(float(last.get("sales_total") or 0) - float(first.get("sales_total") or 0), 2),
-            "production_change": round(float(last.get("production_progress") or 0) - float(first.get("production_progress") or 0), 1),
+            "sales_change": sales_change,
+            "production_change": production_change,
             "trend": trend,
         },
     }
 
 
+
+@app.get("/api/history/summary")
+async def history_summary(
+    category: str = "TODOS",
+    days: int = 30,
+) -> dict[str, object]:
+    return build_historical_summary(category=category, days=days)
+
+
 @app.get("/api/warehouse/executive")
 async def warehouse_executive(
     category: str = "TODOS",
-    days: Annotated[int, Query(ge=1, le=730)] = 90,
+    days: int = 90,
 ) -> dict[str, object]:
     return {
         "enabled": warehouse_enabled(),
@@ -171,7 +179,7 @@ async def warehouse_executive(
 @app.get("/api/warehouse/inventory")
 async def warehouse_inventory(
     product_id: int | None = None,
-    days: Annotated[int, Query(ge=1, le=730)] = 90,
+    days: int = 90,
 ) -> dict[str, object]:
     return {
         "enabled": warehouse_enabled(),
@@ -180,14 +188,103 @@ async def warehouse_inventory(
     }
 
 
-@app.get("/api/warehouse/export.csv", response_class=PlainTextResponse)
+@app.get(
+    "/api/warehouse/export.csv",
+    response_class=PlainTextResponse,
+)
 async def warehouse_export(
     category: str = "TODOS",
-    days: Annotated[int, Query(ge=1, le=730)] = 365,
+    days: int = 365,
 ) -> PlainTextResponse:
-    safe_name = "".join(ch for ch in category.lower() if ch.isalnum() or ch in "-_ ").strip().replace(" ", "-") or "todos"
+    content = export_executive_csv(category=category, days=days)
     return PlainTextResponse(
-        export_executive_csv(category=category, days=days),
-        media_type="text/csv; charset=utf-8",
-        headers={"Content-Disposition": f'attachment; filename="cice-{safe_name}-historico.csv"'},
+        content,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="cice-{category.lower()}-historico.csv"'
+            )
+        },
     )
+
+
+
+@app.post("/api/copilot")
+async def copilot(payload: dict[str, object]) -> dict[str, object]:
+    timezone = ZoneInfo(settings.timezone)
+    now = datetime.now(timezone)
+    start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end = start + timedelta(days=1)
+
+    inventory = await build_inventory(odoo)
+    production = await build_production(odoo, start, end)
+    sales = await build_sales(odoo, start, end)
+    priorities = build_ceo_priorities(inventory, production, sales)
+
+    question = str(payload.get("question") or "")
+    return answer_question(
+        question,
+        inventory,
+        production,
+        sales,
+        priorities,
+    )
+
+
+@app.get("/api/dashboard")
+async def dashboard() -> dict[str, object]:
+    started_at = perf_counter()
+    timezone = ZoneInfo(settings.timezone)
+    now = datetime.now(timezone)
+    start = now.replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start + timedelta(days=1)
+
+    inventory = await build_inventory(odoo)
+    production = await build_production(odoo, start, end)
+    sales = await build_sales(odoo, start, end)
+    intelligence = build_intelligence(
+        inventory,
+        production,
+        sales,
+    )
+
+    ceo_priorities = build_ceo_priorities(
+        inventory,
+        production,
+        sales,
+    )
+
+    history = capture_snapshot(
+        today=start.date(),
+        inventory=inventory,
+        production=production,
+        sales=sales,
+    )
+
+    warehouse = save_warehouse_snapshot(
+        snapshot_date=start.date(),
+        inventory=inventory,
+        production=production,
+        sales=sales,
+    )
+
+    return {
+        "generated_at": now.isoformat(),
+        "query_duration_ms": round((perf_counter() - started_at) * 1000),
+        "source": {
+            "url": settings.odoo_url,
+            "database": settings.odoo_database,
+        },
+        "inventory": inventory,
+        "production": production,
+        "sales": sales,
+        "history": history,
+        "warehouse": warehouse,
+        "ceo_priorities": ceo_priorities,
+        **intelligence,
+    }

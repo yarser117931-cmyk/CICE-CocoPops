@@ -1,0 +1,47 @@
+CICE 10.2 — VERSIÓN MÓVIL Y PWA
+================================
+
+CAMBIOS
+-------
+- Usa el logotipo oficial de Coco Pops.
+- Se puede instalar en iPhone o Android como si fuera una app.
+- Incluye icono de Coco Pops en la pantalla principal.
+- Continúa siendo únicamente de consulta.
+- Nuevo botón circular ↻ para actualizar desde el móvil.
+- Las consultas a /api no se guardan en caché: siempre solicitan datos actuales.
+- Sigue existiendo el botón “Actualizar ahora” en computadora.
+- Actualización automática cada 5 minutos.
+
+PUBLICAR
+--------
+1. Descomprime este ZIP.
+2. Copia todo su contenido a Documentos/GitHub/CICE-CocoPops.
+3. Reemplaza los archivos.
+4. Abre GitHub Desktop.
+5. Summary:
+   Agregar logotipo y versión móvil CICE 10.2
+6. Commit to main.
+7. Push origin.
+8. Espera el despliegue de Render.
+
+INSTALAR EN IPHONE
+------------------
+1. Abre https://cice-cocopops.onrender.com en Safari.
+2. Toca Compartir.
+3. Toca “Agregar a pantalla de inicio”.
+4. Toca “Agregar”.
+
+INSTALAR EN ANDROID
+-------------------
+1. Abre el enlace en Chrome.
+2. Toca el menú ⋮.
+3. Toca “Agregar a pantalla principal” o “Instalar aplicación”.
+4. Confirma.
+
+ACTUALIZAR EN EL MÓVIL
+----------------------
+Toca el botón circular ↻ ubicado abajo a la derecha.
+Este botón vuelve a consultar Odoo.
+
+También puedes deslizar hacia abajo desde la parte superior del navegador,
+pero se recomienda usar el botón interno de CICE.

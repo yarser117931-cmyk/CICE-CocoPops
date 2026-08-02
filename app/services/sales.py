@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 from app.helpers import relation_name
@@ -13,10 +13,8 @@ async def build_sales(
     start: datetime,
     end: datetime,
 ) -> dict[str, Any]:
-    start_utc = start.astimezone(UTC).replace(tzinfo=None)
-    end_utc = end.astimezone(UTC).replace(tzinfo=None)
-    start_str = start_utc.strftime("%Y-%m-%d %H:%M:%S")
-    end_str = end_utc.strftime("%Y-%m-%d %H:%M:%S")
+    start_str = start.strftime("%Y-%m-%d %H:%M:%S")
+    end_str = end.strftime("%Y-%m-%d %H:%M:%S")
     today_str = start.strftime("%Y-%m-%d")
 
     sales = await client.call(

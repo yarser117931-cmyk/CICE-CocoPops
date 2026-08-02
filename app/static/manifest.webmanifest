@@ -1,0 +1,22 @@
+{
+  "name": "CICE Coco Pops",
+  "short_name": "CICE",
+  "description": "Centro de Inteligencia Ejecutiva de Coco Pops",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f5f8",
+  "theme_color": "#861f41",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

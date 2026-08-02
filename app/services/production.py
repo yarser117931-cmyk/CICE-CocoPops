@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 from app.odoo import OdooClient
@@ -12,18 +12,13 @@ async def build_production(
     start: datetime,
     end: datetime,
 ) -> dict[str, Any]:
-    # Odoo stores datetime fields in UTC. Convert the local business day
-    # to UTC before applying the domain to avoid losing early/late records.
-    start_utc = start.astimezone(UTC).replace(tzinfo=None)
-    end_utc = end.astimezone(UTC).replace(tzinfo=None)
-
     manufacturing = await client.call(
         "mrp.production",
         "search_read",
         {
             "domain": [
-                ["date_start", ">=", start_utc.strftime("%Y-%m-%d %H:%M:%S")],
-                ["date_start", "<", end_utc.strftime("%Y-%m-%d %H:%M:%S")],
+                ["date_start", ">=", start.strftime("%Y-%m-%d %H:%M:%S")],
+                ["date_start", "<", end.strftime("%Y-%m-%d %H:%M:%S")],
                 ["state", "!=", "cancel"],
             ],
             "fields": [

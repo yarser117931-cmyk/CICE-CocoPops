@@ -35,9 +35,9 @@ def capture_snapshot(
         "enabled": True,
         "saved_today": saved,
         "message": (
-            "Se creó el resumen diario."
+            "Se guardó el resumen diario."
             if saved
-            else "Se actualizó el resumen de hoy."
+            else "El resumen de hoy ya estaba guardado."
         ),
     }
 

@@ -81,48 +81,44 @@ def save_daily_snapshot(
     production: dict[str, Any],
     sales: dict[str, Any],
 ) -> bool:
-    """Create or refresh the snapshot for the current day.
-
-    Returning True means a new row was created; False means the existing
-    daily row was updated with the latest operational values.
-    """
     if engine is None:
         return False
 
     summary = inventory["global"]
-    values = {
-        "inventory_available": float(summary.get("available") or 0),
-        "inventory_on_hand": float(summary.get("on_hand") or 0),
-        "inventory_reserved": float(summary.get("reserved") or 0),
-        "inventory_minimum": float(summary.get("minimum") or 0),
-        "products_total": int(summary.get("products") or 0),
-        "products_critical": int(summary.get("critical") or 0),
-        "products_below_minimum": int(summary.get("below_minimum") or 0),
-        "products_at_risk": int(summary.get("at_risk") or 0),
-        "products_healthy": int(summary.get("healthy") or 0),
-        "products_without_minimum": int(summary.get("without_minimum") or 0),
-        "production_orders": int(production.get("orders") or 0),
-        "production_planned": float(production.get("planned") or 0),
-        "production_done": float(production.get("done") or 0),
-        "production_progress": float(production.get("progress") or 0),
-        "sales_total": float(sales.get("total") or 0),
-        "sales_orders": int(sales.get("orders") or 0),
-        "sales_customers": int(sales.get("customers") or 0),
-        "invoiced_today": float(sales.get("invoiced_today") or 0),
-    }
 
     with Session(engine) as session:
-        row = session.query(DailySnapshot).filter_by(
+        existing = session.query(DailySnapshot).filter_by(
             snapshot_date=snapshot_date
         ).first()
-        created = row is None
-        if row is None:
-            row = DailySnapshot(snapshot_date=snapshot_date)
-            session.add(row)
-        for field, value in values.items():
-            setattr(row, field, value)
+
+        if existing is not None:
+            return False
+
+        session.add(
+            DailySnapshot(
+                snapshot_date=snapshot_date,
+                inventory_available=float(summary.get("available") or 0),
+                inventory_on_hand=float(summary.get("on_hand") or 0),
+                inventory_reserved=float(summary.get("reserved") or 0),
+                inventory_minimum=float(summary.get("minimum") or 0),
+                products_total=int(summary.get("products") or 0),
+                products_critical=int(summary.get("critical") or 0),
+                products_below_minimum=int(summary.get("below_minimum") or 0),
+                products_at_risk=int(summary.get("at_risk") or 0),
+                products_healthy=int(summary.get("healthy") or 0),
+                products_without_minimum=int(summary.get("without_minimum") or 0),
+                production_orders=int(production.get("orders") or 0),
+                production_planned=float(production.get("planned") or 0),
+                production_done=float(production.get("done") or 0),
+                production_progress=float(production.get("progress") or 0),
+                sales_total=float(sales.get("total") or 0),
+                sales_orders=int(sales.get("orders") or 0),
+                sales_customers=int(sales.get("customers") or 0),
+                invoiced_today=float(sales.get("invoiced_today") or 0),
+            )
+        )
         session.commit()
-        return created
+        return True
 
 
 def read_trends(days: int = 30) -> list[dict[str, Any]]:

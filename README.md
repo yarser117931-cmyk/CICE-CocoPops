@@ -1,50 +1,24 @@
-# CICE Enterprise 1.0
+# CICE Coco Pops
 
-Centro de Inteligencia Ejecutiva de Coco Pops, conectado con Odoo.
-
-## Funciones activas
-
-- Inventario disponible, a la mano y reservado.
-- Comparación producto por producto contra stock mínimo.
-- Categorías ejecutivas, incluyendo Paletas y Fabricación/Ingredientes agrupadas.
-- Producción y ventas del día.
-- Prioridades para la CEO.
-- Copiloto de consultas controladas.
-- Históricos y Data Warehouse cuando `DATABASE_URL` está configurada.
+Centro de Inteligencia Empresarial conectado con Odoo.
 
 ## Arquitectura
 
-- `app/main.py`: rutas web y ciclo de vida.
-- `app/services/dashboard.py`: snapshot operativo, concurrencia y caché.
-- `app/services/inventory.py`: inventario y categorías.
-- `app/services/production.py`: fabricación diaria.
-- `app/services/sales.py`: pedidos y facturación.
-- `app/services/intelligence.py`: resumen y alertas.
-- `app/services/priorities.py`: acciones recomendadas.
-- `app/services/copilot.py`: respuestas controladas.
-- `app/database.py` y `app/services/warehouse.py`: históricos opcionales.
+- `app/services/inventory.py`: inventarios y mínimos.
+- `app/services/production.py`: producción diaria.
+- `app/services/sales.py`: ventas y facturación.
+- `app/services/intelligence.py`: alertas y recomendaciones.
+- `app/odoo.py`: conexión segura con Odoo.
 
-## Publicación en Render
+## Flujo profesional
 
-- Build command: `pip install -r requirements.txt`
-- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- `main`: versión oficial para la CEO.
+- `desarrollo`: versión de pruebas.
+- GitHub valida automáticamente el código antes de publicarlo.
+- El archivo `VERSION` indica la versión vigente.
+- Consulta `docs/FLUJO_DE_TRABAJO.md` para el proceso completo.
 
-Variables requeridas:
+## Seguridad
 
-- `ODOO_URL`
-- `ODOO_DATABASE`
-- `ODOO_API_KEY`
-- `TIMEZONE=America/Chihuahua`
-
-Variable opcional:
-
-- `DATABASE_URL` para históricos persistentes.
-
-## Validación
-
-```bash
-python -m compileall app
-python -m unittest discover -s tests -v
-```
-
-La clave de Odoo nunca debe subirse a GitHub.
+La clave API de Odoo debe mantenerse únicamente en las variables secretas
+de Render. Nunca debe escribirse en GitHub ni dentro del código.

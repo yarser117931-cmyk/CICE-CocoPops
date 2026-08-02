@@ -138,14 +138,51 @@ svg.chart{width:100%;height:280px;min-width:720px}
 .refresh-btn:disabled{opacity:.6;cursor:wait}
 .sync-meta{font-size:12px;color:var(--muted);margin-top:4px}
 
+
+.brand-logo-img{
+  width:54px;height:54px;border-radius:16px;object-fit:cover;
+  border:2px solid rgba(255,255,255,.15);background:#fff
+}
+.mobile-refresh{
+  position:fixed;right:18px;bottom:18px;z-index:950;
+  width:56px;height:56px;border-radius:50%;
+  border:0;background:#861f41;color:#fff;
+  font-size:25px;font-weight:900;cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
+  display:none
+}
+.mobile-refresh:disabled{opacity:.65;cursor:wait}
+.mobile-refresh.spinning{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mobile-tip{
+  display:none;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;
+  border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13px
+}
+@media(max-width:780px){
+  .mobile-refresh{display:block}
+  .mobile-tip{display:block}
+  .sidebar{max-height:none}
+  .top{align-items:flex-start}
+  h1{font-size:28px}
+  .main{padding-bottom:90px}
+}
+
 </style>
+
+<link rel="manifest" href="/static/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+<meta name="theme-color" content="#861f41">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="CICE">
+
 </head>
 <body>
 <div class="shell">
   <aside class="sidebar">
     <div class="logo-wrap">
-      <div class="logo">CP</div>
-      <div><div class="brand-title">CICE</div><div class="brand-sub">Powered by Odoo</div></div>
+      <img class="brand-logo-img" src="/static/cocopops-logo.jpg" alt="Coco Pops">
+      <div><div class="brand-title">CICE</div><div class="brand-sub">Solo consulta · Powered by Odoo</div></div>
     </div>
     <div class="nav-label">Centro de mando</div>
     <button class="nav-btn active" data-module="home">Resumen Ejecutivo</button>
@@ -180,6 +217,9 @@ svg.chart{width:100%;height:280px;min-width:720px}
     <div id="status" class="hidden"></div>
 
     <div id="dashboard" hidden>
+      <div class="mobile-tip">
+        Para traer los datos más recientes, toca el botón circular ↻ de la esquina inferior derecha.
+      </div>
       <section id="homeView">
         <div class="command-grid">
           <button class="command" data-open="inventory"><div class="icon">📦</div><div class="title">Inventarios</div><div class="desc">Existencias, mínimos y riesgos</div></button>
@@ -780,10 +820,10 @@ function formatSyncMeta(generatedAt,durationMs){
   return `Actualizado: ${when} · Consulta: ${seconds} s`;
 }
 
-async function loadData(force=false){
+async function loadData(){
   status.className='hidden';dashboard.hidden=true;
   try{
-    const response=await fetch('/api/dashboard'+(force?'?refresh=true':''),{cache:'no-store'});
+    const response=await fetch('/api/dashboard',{cache:'no-store'});
     DATA=await response.json();if(!response.ok)throw new Error(DATA.detail||'No fue posible consultar Odoo.');
     syncMeta.textContent=formatSyncMeta(DATA.generated_at,DATA.query_duration_ms);
     setSyncState('ok','Datos sincronizados');
@@ -799,7 +839,13 @@ document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
 cardsBtn.onclick=()=>{productView='cards';productCards.classList.remove('hidden');tableContainer.classList.add('hidden');cardsBtn.classList.add('active');tableBtn.classList.remove('active');};
 tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');tableContainer.classList.remove('hidden');tableBtn.classList.add('active');cardsBtn.classList.remove('active');};
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/static/service-worker.js').catch(() => {});
+  });
+}
 loadData();setInterval(loadData,300000);
 </script>
+<button id="mobileRefresh" class="mobile-refresh" aria-label="Actualizar datos">↻</button>
 </body>
 </html>
