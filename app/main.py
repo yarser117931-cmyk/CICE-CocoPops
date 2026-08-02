@@ -19,7 +19,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
-app = FastAPI(title="CICE Coco Pops", version="2.0.0")
+app = FastAPI(title="CICE Coco Pops", version="3.0.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 ODOO_URL = os.getenv("ODOO_URL", "https://cocopopsmx1.odoo.com").rstrip("/")
@@ -146,7 +146,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, Any]:
     return {
         "status": "ok",
-        "version": "2.0.0",
+        "version": "3.0.0",
         "odoo_url": ODOO_URL,
         "database": ODOO_DATABASE,
     }
@@ -466,6 +466,39 @@ async def dashboard() -> dict[str, Any]:
         ),
     }
 
+    recommendations: list[dict[str, Any]] = []
+
+    critical_items = [
+        item for item in items
+        if item["status"] in ("CRITICO", "BAJO_MINIMO")
+    ]
+    critical_items.sort(
+        key=lambda item: (
+            item["coverage_pct"] if item["coverage_pct"] is not None else 999999,
+            item["name"],
+        )
+    )
+
+    for item in critical_items[:5]:
+        action = (
+            "Fabricar"
+            if "PALETA" in item["category"].upper()
+            or "NIEVE" in item["category"].upper()
+            or "HELADO" in item["category"].upper()
+            else "Reabastecer"
+        )
+        recommendations.append({
+            "priority": "ALTA" if item["status"] == "CRITICO" else "MEDIA",
+            "action": action,
+            "product": item["name"],
+            "category": item["category"],
+            "message": (
+                f"Disponible {round(item['available'], 2)} "
+                f"contra mínimo {round(item['minimum'], 2)}. "
+                f"Faltan {round(item['missing_to_minimum'], 2)} {item['uom']}."
+            ),
+        })
+
     return {
         "generated_at": now.isoformat(),
         "source": {"url": ODOO_URL, "database": ODOO_DATABASE},
@@ -490,4 +523,5 @@ async def dashboard() -> dict[str, Any]:
         },
         "alerts": alerts,
         "executive_summary": executive_summary,
+        "recommendations": recommendations,
     }

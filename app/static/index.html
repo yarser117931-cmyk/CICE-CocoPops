@@ -6,59 +6,73 @@
 <title>CICE Coco Pops</title>
 <style>
 :root{
-  --bg:#f5f6fa;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;
+  --bg:#f4f5f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;
   --green:#15803d;--amber:#b45309;--red:#b91c1c;--orange:#c2410c;
-  --purple:#7c3aed;--nav:#111827;
+  --purple:#7c3aed;--nav:#111827;--blue:#2563eb;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
-.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-.sidebar{background:var(--nav);color:white;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
-.logo-wrap{display:flex;gap:12px;align-items:center;margin-bottom:24px}
+.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sidebar{background:var(--nav);color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo-wrap{display:flex;gap:12px;align-items:center;margin-bottom:22px}
 .logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#ec4899);display:grid;place-items:center;font-weight:900}
-.brand-title{font-weight:900;font-size:18px}.brand-sub{font-size:12px;color:#cbd5e1}
+.brand-title{font-size:18px;font-weight:900}.brand-sub{font-size:12px;color:#cbd5e1}
 .nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;margin:18px 10px 8px}
 .nav-btn{width:100%;border:0;background:transparent;color:#e5e7eb;text-align:left;padding:11px 12px;border-radius:12px;font-weight:800;cursor:pointer;margin:3px 0}
 .nav-btn:hover,.nav-btn.active{background:#1f2937;color:#fff}
 .main{padding:22px;max-width:1500px;width:100%;margin:auto}
 .top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
-h1{margin:0;font-size:clamp(25px,4vw,36px)}h2{margin:7px 0 0}
+h1{margin:0;font-size:clamp(25px,4vw,36px)} h2{margin:7px 0 0}
 .muted{color:var(--muted)}
 .stamp,.card{background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(31,41,55,.06)}
 .stamp{padding:12px 15px;border-radius:15px;text-align:right}
+.command-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
+.command{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;cursor:pointer;box-shadow:0 8px 24px rgba(31,41,55,.05);text-align:left}
+.command:hover{transform:translateY(-1px)}
+.command .icon{font-size:28px}.command .title{font-weight:900;margin-top:8px}.command .desc{font-size:12px;color:var(--muted);margin-top:4px}
 .status-banner{border-radius:20px;padding:18px 20px;margin-bottom:18px;display:flex;justify-content:space-between;gap:16px;align-items:center}
 .status-banner.critical{background:#fee2e2;color:#7f1d1d}.status-banner.attention{background:#ffedd5;color:#9a3412}.status-banner.stable{background:#dcfce7;color:#166534}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .card{padding:20px;border-radius:20px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .eyebrow{text-transform:uppercase;letter-spacing:.1em;font-size:11px;font-weight:900;color:var(--muted)}
 .big{font-size:clamp(34px,4vw,50px);font-weight:900;letter-spacing:-.05em;margin:8px 0 2px}
 .pill{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}
 .ok{background:#dcfce7;color:#166534}.warn{background:#ffedd5;color:#9a3412}.bad{background:#fee2e2;color:#991b1b}.neutral{background:#ede9fe;color:#5b21b6}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .mini{margin-top:16px}.mini div{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:9px 0;font-size:14px}
 .progress{height:12px;background:#eef2f7;border-radius:999px;overflow:hidden;margin:14px 0}.bar{height:100%;background:var(--purple)}
-.section{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:16px}
-.table-card{margin-top:16px}
-.table-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.section{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.category-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;cursor:pointer}
+.category-card:hover{transform:translateY(-1px)}
+.category-title{font-weight:900}.category-sub{font-size:12px;color:var(--muted);margin-top:6px}
+.product-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
 .search{flex:1;min-width:220px;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.filter{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:white}
+.filter,.view-btn{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-weight:800}
+.view-btn.active{background:#111827;color:#fff}
+.product-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.product-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.product-name{font-weight:900}.product-code{font-size:12px;color:var(--muted);margin-top:3px}
+.metric-line{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0;font-size:14px}
 .table-wrap{overflow:auto;max-height:65vh}
 table{width:100%;border-collapse:collapse;min-width:1000px}
 th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
-th{font-size:11px;text-transform:uppercase;color:var(--muted);position:sticky;top:0;background:white}
+th{font-size:11px;text-transform:uppercase;color:var(--muted);position:sticky;top:0;background:#fff}
 td.num,th.num{text-align:right}
-.alerts{display:grid;gap:10px;margin-top:12px;max-height:420px;overflow:auto}
-.alert{border:1px solid var(--line);border-radius:14px;padding:12px}
-.alert.critical{border-left:6px solid var(--red)}.alert.important{border-left:6px solid var(--orange)}
-.alert-title{font-weight:900}.alert-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.alerts,.recommendations{display:grid;gap:10px;margin-top:12px}
+.alert,.recommendation{border:1px solid var(--line);border-radius:14px;padding:12px}
+.alert.critical,.recommendation.high{border-left:6px solid var(--red)}
+.alert.important,.recommendation.medium{border-left:6px solid var(--orange)}
+.alert-title,.rec-title{font-weight:900}
+.alert-meta,.rec-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .status-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .dot-red{background:var(--red)}.dot-amber{background:var(--amber)}.dot-green{background:var(--green)}.dot-gray{background:#9ca3af}
 .loading,.error{padding:30px;text-align:center}.error{color:var(--red)}
-.mobile-menu{display:none}
-@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.section{grid-template-columns:1fr}}
+.hidden{display:none!important}
+@media(max-width:1200px){.command-grid{grid-template-columns:repeat(3,1fr)}.grid,.category-grid,.product-cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:780px){
-  .shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.mobile-menu{display:block}
-  .grid{grid-template-columns:1fr}.stamp{display:none}.main{padding:14px}
+  .shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:14px}
+  .command-grid,.grid,.category-grid,.product-cards,.section{grid-template-columns:1fr}.stamp{display:none}
 }
 </style>
 </head>
@@ -67,97 +81,156 @@ td.num,th.num{text-align:right}
   <aside class="sidebar">
     <div class="logo-wrap">
       <div class="logo">CP</div>
-      <div><div class="brand-title">CICE Coco Pops</div><div class="brand-sub">Centro Ejecutivo</div></div>
+      <div><div class="brand-title">CICE</div><div class="brand-sub">Powered by Odoo</div></div>
     </div>
-
-    <div class="nav-label">Vista general</div>
-    <button class="nav-btn active" data-category="TODOS">Resumen Ejecutivo</button>
-    <button class="nav-btn" id="alertsNav">Centro de Alertas</button>
-
-    <div class="nav-label">Inventario por categoría</div>
+    <div class="nav-label">Centro de mando</div>
+    <button class="nav-btn active" data-module="home">Resumen Ejecutivo</button>
+    <button class="nav-btn" data-module="inventory">Inventarios</button>
+    <button class="nav-btn" data-module="production">Producción</button>
+    <button class="nav-btn" data-module="sales">Ventas</button>
+    <button class="nav-btn" data-module="alerts">Alertas</button>
+    <div class="nav-label">Categorías de inventario</div>
     <div id="categoryNav"></div>
   </aside>
 
   <main class="main">
     <div class="top">
-      <div><h1 id="pageTitle">Resumen Ejecutivo</h1><div class="muted">Información actualizada desde Odoo</div></div>
+      <div><h1 id="pageTitle">Centro de Mando</h1><div class="muted">CICE — Centro de Inteligencia y Control Ejecutivo</div></div>
       <div class="stamp"><b>Última actualización</b><br><span id="updated">Cargando…</span></div>
     </div>
 
     <div id="status" class="card loading">Conectando con Odoo…</div>
 
     <div id="dashboard" hidden>
-      <div id="companyBanner" class="status-banner">
-        <div><b id="companyHeadline"></b><div id="companyDetail"></div></div>
-        <span id="companyPill" class="pill"></span>
-      </div>
+      <section id="homeView">
+        <div class="command-grid">
+          <button class="command" data-open="inventory"><div class="icon">📦</div><div class="title">Inventarios</div><div class="desc">Existencias, mínimos y riesgos</div></button>
+          <button class="command" data-open="production"><div class="icon">🏭</div><div class="title">Producción</div><div class="desc">Órdenes y avance del día</div></button>
+          <button class="command" data-open="sales"><div class="icon">💰</div><div class="title">Ventas</div><div class="desc">Pedidos y facturación</div></button>
+          <button class="command" data-open="inventory"><div class="icon">🛒</div><div class="title">Compras</div><div class="desc">Próxima fase</div></button>
+          <button class="command" data-open="inventory"><div class="icon">🚚</div><div class="title">Logística</div><div class="desc">Próxima fase</div></button>
+          <button class="command" data-open="alerts"><div class="icon">🚨</div><div class="title">Alertas</div><div class="desc">Prioridades del día</div></button>
+        </div>
 
-      <section class="grid">
-        <article class="card">
-          <div class="row"><div class="eyebrow">Cobertura de inventario</div><span id="coveragePill" class="pill"></span></div>
-          <div class="big" id="coverage">—</div>
-          <div class="muted">Disponible contra stock mínimo</div>
-          <div class="progress"><div class="bar" id="coverageBar"></div></div>
-          <div class="mini"><div><span>Stock mínimo</span><b id="minimumTotal"></b></div><div><span>Productos con mínimo</span><b id="withMinimum"></b></div></div>
+        <div id="companyBanner" class="status-banner">
+          <div><b id="companyHeadline"></b><div id="companyDetail"></div></div>
+          <span id="companyPill" class="pill"></span>
+        </div>
+
+        <section class="grid">
+          <article class="card">
+            <div class="eyebrow">Inventario</div><div class="big" id="homeCoverage">—</div>
+            <div class="muted">Cobertura global</div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Productos críticos</div><div class="big" id="homeCritical">0</div>
+            <div class="muted">Requieren atención</div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Producción</div><div class="big" id="homeProduction">0%</div>
+            <div class="muted">Avance del día</div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Ventas</div><div class="big" id="homeSales">$0</div>
+            <div class="muted">Confirmadas hoy</div>
+          </article>
+        </section>
+
+        <section class="section">
+          <article class="card">
+            <div class="eyebrow">Lo que debes saber</div>
+            <h2>Recomendaciones automáticas</h2>
+            <div id="recommendations" class="recommendations"></div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Resumen ejecutivo</div>
+            <h2>Situación del día</h2>
+            <div id="executiveSummary" style="line-height:1.7"></div>
+          </article>
+        </section>
+      </section>
+
+      <section id="inventoryView" class="hidden">
+        <section class="grid">
+          <article class="card">
+            <div class="row"><div class="eyebrow">Cobertura de inventario</div><span id="coveragePill" class="pill"></span></div>
+            <div class="big" id="coverage">—</div>
+            <div class="muted">Disponible contra stock mínimo</div>
+            <div class="progress"><div class="bar" id="coverageBar"></div></div>
+            <div class="mini"><div><span>Stock mínimo</span><b id="minimumTotal"></b></div><div><span>Productos con mínimo</span><b id="withMinimum"></b></div></div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Inventario disponible</div><div class="big" id="availableTotal">0</div>
+            <div class="muted">Existencia libre para venta</div>
+            <div class="mini"><div><span>A la mano</span><b id="onHandTotal"></b></div><div><span>Reservado</span><b id="reservedTotal"></b></div><div><span>Productos</span><b id="productsTotal"></b></div></div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Críticos</div><div class="big" id="criticalCount">0</div>
+            <div class="muted">Productos en mayor riesgo</div>
+          </article>
+          <article class="card">
+            <div class="eyebrow">Sin mínimo</div><div class="big" id="withoutMinimum">0</div>
+            <div class="muted">Requieren configurar política</div>
+          </article>
+        </section>
+
+        <article class="card" style="margin-top:16px">
+          <div class="eyebrow">Categorías</div>
+          <h2>Selecciona un almacén o categoría</h2>
+          <div id="categoryCards" class="category-grid"></div>
         </article>
 
-        <article class="card">
-          <div class="row"><div class="eyebrow">Inventario disponible</div><span class="pill neutral">Para venta</span></div>
-          <div class="big" id="availableTotal">0</div>
-          <div class="muted">Existencia libre después de reservas</div>
-          <div class="mini"><div><span>A la mano</span><b id="onHandTotal"></b></div><div><span>Reservado</span><b id="reservedTotal"></b></div><div><span>Productos</span><b id="productsTotal"></b></div></div>
-        </article>
-
-        <article class="card">
-          <div class="row"><div class="eyebrow">Producción de hoy</div><span class="pill warn">Odoo Fabricación</span></div>
-          <div class="big" id="productionProgress">0%</div>
-          <div class="muted">Avance terminado</div>
-          <div class="mini"><div><span>Órdenes</span><b id="productionOrders"></b></div><div><span>Planeado</span><b id="productionPlanned"></b></div><div><span>Terminado</span><b id="productionDone"></b></div></div>
-        </article>
-
-        <article class="card">
-          <div class="row"><div class="eyebrow">Ventas del día</div><span class="pill ok">Confirmadas</span></div>
-          <div class="big" id="salesTotal">$0</div>
-          <div class="muted">Pedidos confirmados hoy</div>
-          <div class="mini"><div><span>Pedidos</span><b id="salesOrders"></b></div><div><span>Clientes</span><b id="salesCustomers"></b></div><div><span>Facturado</span><b id="invoiced"></b></div></div>
+        <article class="card" style="margin-top:16px">
+          <div class="eyebrow">Productos</div>
+          <h2 id="tableTitle">Todos los productos</h2>
+          <div class="product-toolbar">
+            <input id="searchInput" class="search" type="search" placeholder="Buscar producto o código">
+            <select id="statusFilter" class="filter">
+              <option value="TODOS">Todos los estados</option>
+              <option value="CRITICO">Críticos</option>
+              <option value="BAJO_MINIMO">Bajo mínimo</option>
+              <option value="EN_RIESGO">En riesgo</option>
+              <option value="SALUDABLE">Saludables</option>
+              <option value="SIN_MINIMO">Sin mínimo</option>
+            </select>
+            <button id="cardsBtn" class="view-btn active">Tarjetas</button>
+            <button id="tableBtn" class="view-btn">Tabla</button>
+          </div>
+          <div id="productCards" class="product-cards"></div>
+          <div id="tableContainer" class="table-wrap hidden">
+            <table>
+              <thead><tr><th>Código</th><th>Producto</th><th>Categoría Odoo</th><th class="num">Disponible</th><th class="num">A la mano</th><th class="num">Reservado</th><th class="num">Mínimo</th><th class="num">Faltante</th><th class="num">Cobertura</th><th>Estado</th></tr></thead>
+              <tbody id="productTable"></tbody>
+            </table>
+          </div>
         </article>
       </section>
 
-      <section class="section">
-        <article class="card">
-          <div class="eyebrow">Resumen ejecutivo automático</div>
-          <h2>Qué necesita atención hoy</h2>
-          <div id="executiveSummary" style="line-height:1.7"></div>
-        </article>
+      <section id="productionView" class="hidden">
+        <section class="grid">
+          <article class="card"><div class="eyebrow">Avance del día</div><div class="big" id="productionProgress">0%</div><div class="muted">Producción terminada</div></article>
+          <article class="card"><div class="eyebrow">Órdenes</div><div class="big" id="productionOrders">0</div><div class="muted">Órdenes activas hoy</div></article>
+          <article class="card"><div class="eyebrow">Planeado</div><div class="big" id="productionPlanned">0</div><div class="muted">Cantidad programada</div></article>
+          <article class="card"><div class="eyebrow">Terminado</div><div class="big" id="productionDone">0</div><div class="muted">Cantidad completada</div></article>
+        </section>
+      </section>
 
-        <article class="card" id="alertsSection">
+      <section id="salesView" class="hidden">
+        <section class="grid">
+          <article class="card"><div class="eyebrow">Ventas de hoy</div><div class="big" id="salesTotal">$0</div><div class="muted">Pedidos confirmados</div></article>
+          <article class="card"><div class="eyebrow">Pedidos</div><div class="big" id="salesOrders">0</div><div class="muted">Confirmados hoy</div></article>
+          <article class="card"><div class="eyebrow">Clientes</div><div class="big" id="salesCustomers">0</div><div class="muted">Atendidos hoy</div></article>
+          <article class="card"><div class="eyebrow">Facturado</div><div class="big" id="invoiced">$0</div><div class="muted">Facturación publicada hoy</div></article>
+        </section>
+      </section>
+
+      <section id="alertsView" class="hidden">
+        <article class="card">
           <div class="eyebrow">Centro de alertas</div>
-          <h2>Prioridades</h2>
+          <h2>Prioridades del día</h2>
           <div id="alertsList" class="alerts"></div>
         </article>
       </section>
-
-      <article class="card table-card">
-        <div class="eyebrow">Consulta por producto</div>
-        <h2 id="tableTitle">Existencia de todos los productos</h2>
-        <div class="table-tools">
-          <input id="searchInput" class="search" type="search" placeholder="Buscar producto o código">
-          <select id="statusFilter" class="filter">
-            <option value="TODOS">Todos los estados</option>
-            <option value="CRITICO">Críticos</option>
-            <option value="BAJO_MINIMO">Bajo mínimo</option>
-            <option value="EN_RIESGO">En riesgo</option>
-            <option value="SALUDABLE">Saludables</option>
-            <option value="SIN_MINIMO">Sin mínimo</option>
-          </select>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Código</th><th>Producto</th><th>Categoría Odoo</th><th class="num">Disponible</th><th class="num">A la mano</th><th class="num">Reservado</th><th class="num">Mínimo</th><th class="num">Faltante</th><th class="num">Cobertura</th><th>Estado</th></tr></thead>
-            <tbody id="productTable"></tbody>
-          </table>
-        </div>
-      </article>
     </div>
   </main>
 </div>
@@ -165,8 +238,7 @@ td.num,th.num{text-align:right}
 <script>
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n||0));
 const num=n=>new Intl.NumberFormat('es-MX',{maximumFractionDigits:2}).format(Number(n||0));
-let DATA=null;
-let selectedCategory='TODOS';
+let DATA=null,selectedCategory='TODOS',productView='cards';
 
 function coverageStyle(value){
   if(value===null||value===undefined)return{text:'Sin datos',cls:'neutral',color:'#7c3aed'};
@@ -179,61 +251,90 @@ function statusLabel(status){
   const item=map[status]||['Sin dato','dot-gray'];
   return `<span class="status-dot ${item[1]}"></span>${item[0]}`;
 }
+function openModule(module){
+  ['home','inventory','production','sales','alerts'].forEach(name=>{
+    document.getElementById(name+'View').classList.toggle('hidden',name!==module);
+  });
+  const titles={home:'Centro de Mando',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
+  pageTitle.textContent=titles[module];
+  document.querySelectorAll('.nav-btn[data-module]').forEach(b=>b.classList.toggle('active',b.dataset.module===module));
+}
 function currentSummary(){
   if(selectedCategory==='TODOS')return DATA.inventory.global;
   return DATA.inventory.categories.find(c=>c.name===selectedCategory)||DATA.inventory.global;
 }
-function renderNav(){
-  categoryNav.innerHTML=DATA.inventory.categories.map(c=>`<button class="nav-btn ${selectedCategory===c.name?'active':''}" data-category="${c.name}">${c.name}</button>`).join('');
-  document.querySelectorAll('.nav-btn[data-category]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      selectedCategory=btn.dataset.category;
-      document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
-      btn.classList.add('active');
-      renderAll();
-    });
+function renderCategoryNav(){
+  categoryNav.innerHTML=DATA.inventory.categories.map(c=>`<button class="nav-btn" data-category="${c.name}">${c.name}</button>`).join('');
+  document.querySelectorAll('.nav-btn[data-category]').forEach(btn=>btn.onclick=()=>{
+    selectedCategory=btn.dataset.category;openModule('inventory');renderInventory();
   });
-  alertsNav.onclick=()=>document.getElementById('alertsSection').scrollIntoView({behavior:'smooth'});
 }
-function renderSummary(){
-  const s=currentSummary(),c=coverageStyle(s.coverage_pct);
-  pageTitle.textContent=selectedCategory==='TODOS'?'Resumen Ejecutivo':selectedCategory;
-  coverage.textContent=s.coverage_pct===null?'—':num(s.coverage_pct)+'%';
-  coveragePill.textContent=c.text;coveragePill.className='pill '+c.cls;
-  coverageBar.style.width=Math.min(100,Math.max(0,s.coverage_pct||0))+'%';coverageBar.style.background=c.color;
-  minimumTotal.textContent=num(s.minimum);withMinimum.textContent=s.products_with_minimum;
-  availableTotal.textContent=num(s.available);onHandTotal.textContent=num(s.on_hand);reservedTotal.textContent=num(s.reserved);productsTotal.textContent=s.products;
-  tableTitle.textContent=selectedCategory==='TODOS'?'Existencia de todos los productos':'Existencia de '+selectedCategory;
+function renderCategoryCards(){
+  categoryCards.innerHTML=DATA.inventory.categories.map(c=>{
+    const cs=coverageStyle(c.coverage_pct);
+    return `<div class="category-card" data-category="${c.name}">
+      <div class="row"><div class="category-title">${c.name}</div><span class="pill ${cs.cls}">${c.coverage_pct===null?'—':num(c.coverage_pct)+'%'}</span></div>
+      <div class="category-sub">${c.products} productos · ${c.critical+c.below_minimum} por atender · ${num(c.available)} disponibles</div>
+    </div>`;
+  }).join('');
+  categoryCards.querySelectorAll('.category-card').forEach(card=>card.onclick=()=>{
+    selectedCategory=card.dataset.category;renderInventory();window.scrollTo({top:0,behavior:'smooth'});
+  });
 }
-function renderProducts(){
+function filteredProducts(){
   const search=searchInput.value.trim().toLowerCase(),state=statusFilter.value;
-  const products=DATA.inventory.products.filter(p=>{
+  return DATA.inventory.products.filter(p=>{
     const categoryOk=selectedCategory==='TODOS'||p.category===selectedCategory;
     const stateOk=state==='TODOS'||p.status===state;
     const text=(p.code+' '+p.name+' '+p.category+' '+(p.original_category||'')).toLowerCase();
     return categoryOk&&stateOk&&(!search||text.includes(search));
   });
+}
+function renderProducts(){
+  const products=filteredProducts();
+  productCards.innerHTML=products.map(p=>`<div class="product-card">
+    <div class="product-name">${p.name}</div><div class="product-code">${p.code||'Sin código'} · ${p.original_category||p.category}</div>
+    <div style="margin-top:12px">${statusLabel(p.status)}</div>
+    <div class="metric-line"><span>Disponible</span><b>${num(p.available)} ${p.uom||''}</b></div>
+    <div class="metric-line"><span>Mínimo</span><b>${num(p.minimum)} ${p.uom||''}</b></div>
+    <div class="metric-line"><span>Faltante</span><b>${num(p.missing_to_minimum)} ${p.uom||''}</b></div>
+    <div class="metric-line"><span>Cobertura</span><b>${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</b></div>
+  </div>`).join('')||'<div class="muted">No hay productos para este filtro.</div>';
+
   productTable.innerHTML=products.map(p=>`<tr>
     <td>${p.code||'—'}</td><td><b>${p.name}</b></td><td>${p.original_category||p.category}</td>
     <td class="num">${num(p.available)} ${p.uom||''}</td><td class="num">${num(p.on_hand)} ${p.uom||''}</td>
     <td class="num">${num(p.reserved)} ${p.uom||''}</td><td class="num">${num(p.minimum)} ${p.uom||''}</td>
-    <td class="num">${num(p.missing_to_minimum)} ${p.uom||''}</td><td class="num"><b>${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</b></td>
+    <td class="num">${num(p.missing_to_minimum)} ${p.uom||''}</td><td class="num">${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</td>
     <td>${statusLabel(p.status)}</td></tr>`).join('')||'<tr><td colspan="10">No hay productos para este filtro.</td></tr>';
 }
-function renderAlerts(){
-  const alerts=DATA.alerts.filter(a=>selectedCategory==='TODOS'||a.category===selectedCategory);
-  alertsList.innerHTML=alerts.map(a=>`<div class="alert ${a.level==='CRITICO'?'critical':'important'}"><div class="alert-title">${a.title}</div><div>${a.message}</div><div class="alert-meta">${a.category} · ${a.level}</div></div>`).join('')||'<div class="muted">No hay alertas para esta categoría.</div>';
+function renderInventory(){
+  const s=currentSummary(),cs=coverageStyle(s.coverage_pct);
+  coverage.textContent=s.coverage_pct===null?'—':num(s.coverage_pct)+'%';
+  coveragePill.textContent=cs.text;coveragePill.className='pill '+cs.cls;
+  coverageBar.style.width=Math.min(100,Math.max(0,s.coverage_pct||0))+'%';coverageBar.style.background=cs.color;
+  minimumTotal.textContent=num(s.minimum);withMinimum.textContent=s.products_with_minimum;
+  availableTotal.textContent=num(s.available);onHandTotal.textContent=num(s.on_hand);reservedTotal.textContent=num(s.reserved);productsTotal.textContent=s.products;
+  criticalCount.textContent=s.critical;withoutMinimum.textContent=s.without_minimum;
+  tableTitle.textContent=selectedCategory==='TODOS'?'Todos los productos':selectedCategory;
+  renderProducts();
 }
-function renderExecutive(){
-  const e=DATA.executive_summary;
-  companyHeadline.textContent=e.headline;
-  companyDetail.textContent=e.inventory_message;
+function renderAlerts(){
+  alertsList.innerHTML=DATA.alerts.map(a=>`<div class="alert ${a.level==='CRITICO'?'critical':'important'}">
+    <div class="alert-title">${a.title}</div><div>${a.message}</div><div class="alert-meta">${a.category} · ${a.level}</div></div>`).join('')||'<div class="muted">No hay alertas.</div>';
+}
+function renderHome(){
+  const g=DATA.inventory.global,e=DATA.executive_summary;
+  homeCoverage.textContent=g.coverage_pct===null?'—':num(g.coverage_pct)+'%';
+  homeCritical.textContent=g.critical;homeProduction.textContent=num(DATA.production.progress)+'%';homeSales.textContent=money(DATA.sales.total);
+  companyHeadline.textContent=e.headline;companyDetail.textContent=e.inventory_message;
   companyPill.textContent=e.company_status==='CRITICO'?'Crítico':e.company_status==='ATENCION'?'Atención':'Estable';
   companyPill.className='pill '+(e.company_status==='CRITICO'?'bad':e.company_status==='ATENCION'?'warn':'ok');
   companyBanner.className='status-banner '+(e.company_status==='CRITICO'?'critical':e.company_status==='ATENCION'?'attention':'stable');
   executiveSummary.innerHTML=`<p><b>Inventario:</b> ${e.inventory_message}</p><p><b>Producción:</b> ${e.production_message}</p><p><b>Ventas:</b> ${e.sales_message}</p>`;
+  recommendations.innerHTML=DATA.recommendations.map(r=>`<div class="recommendation ${r.priority==='ALTA'?'high':'medium'}">
+    <div class="rec-title">${r.action}: ${r.product}</div><div>${r.message}</div><div class="rec-meta">${r.category} · Prioridad ${r.priority}</div></div>`).join('')||'<div class="muted">Sin recomendaciones urgentes.</div>';
 }
-function renderAll(){renderNav();renderSummary();renderProducts();renderAlerts();}
 async function loadData(){
   status.hidden=false;dashboard.hidden=true;
   try{
@@ -242,10 +343,15 @@ async function loadData(){
     updated.textContent=new Date(DATA.generated_at).toLocaleString('es-MX');
     productionProgress.textContent=num(DATA.production.progress)+'%';productionOrders.textContent=DATA.production.orders;productionPlanned.textContent=num(DATA.production.planned);productionDone.textContent=num(DATA.production.done);
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
-    renderExecutive();renderAll();status.hidden=true;dashboard.hidden=false;
+    renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();
+    status.hidden=true;dashboard.hidden=false;
   }catch(error){status.className='card error';status.innerHTML='<b>No se pudo conectar.</b><br><br>'+error.message;}
 }
+document.querySelectorAll('[data-module]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
+document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.open));
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
+cardsBtn.onclick=()=>{productView='cards';productCards.classList.remove('hidden');tableContainer.classList.add('hidden');cardsBtn.classList.add('active');tableBtn.classList.remove('active');};
+tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');tableContainer.classList.remove('hidden');tableBtn.classList.add('active');cardsBtn.classList.remove('active');};
 loadData();setInterval(loadData,300000);
 </script>
 </body>
