@@ -26,7 +26,7 @@ h1{margin:0;font-size:clamp(25px,4vw,36px)} h2{margin:7px 0 0}
 .muted{color:var(--muted)}
 .stamp,.card{background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(31,41,55,.06)}
 .stamp{padding:12px 15px;border-radius:15px;text-align:right}
-.command-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.command-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
 .command{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;cursor:pointer;box-shadow:0 8px 24px rgba(31,41,55,.05);text-align:left}
 .command:hover{transform:translateY(-1px)}
 .command .icon{font-size:28px}.command .title{font-weight:900;margin-top:8px}.command .desc{font-size:12px;color:var(--muted);margin-top:4px}
@@ -51,7 +51,7 @@ h1{margin:0;font-size:clamp(25px,4vw,36px)} h2{margin:7px 0 0}
 .filter,.view-btn{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-weight:800}
 .view-btn.active{background:#111827;color:#fff}
 .product-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.product-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;cursor:pointer}.product-card:hover{transform:translateY(-1px);box-shadow:0 10px 25px rgba(31,41,55,.08)}
+.product-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
 .product-name{font-weight:900}.product-code{font-size:12px;color:var(--muted);margin-top:3px}
 .metric-line{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:8px 0;font-size:14px}
 .table-wrap{overflow:auto;max-height:65vh}
@@ -67,7 +67,7 @@ td.num,th.num{text-align:right}
 .alert-meta,.rec-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .status-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .dot-red{background:var(--red)}.dot-amber{background:var(--amber)}.dot-green{background:var(--green)}.dot-gray{background:#9ca3af}
-.loading,.error{padding:30px;text-align:center}.error{color:var(--red)}.category-groups{display:grid;gap:18px;margin-top:14px}.category-group-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:900}.sync{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--green);font-weight:800}.sync-dot{width:9px;height:9px;border-radius:50%;background:var(--green)}.modal{position:fixed;inset:0;background:rgba(15,23,42,.58);display:grid;place-items:center;padding:20px;z-index:1000}.modal-card{background:#fff;border-radius:22px;padding:22px;max-width:760px;width:100%;max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.close{border:0;background:#eef2f7;border-radius:12px;padding:8px 11px;font-weight:900;cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.detail-box{border:1px solid var(--line);border-radius:16px;padding:14px}.detail-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900}.detail-value{font-size:24px;font-weight:900;margin-top:4px}
+.loading,.error{padding:30px;text-align:center}.error{color:var(--red)}
 .hidden{display:none!important}
 @media(max-width:1200px){.command-grid{grid-template-columns:repeat(3,1fr)}.grid,.category-grid,.product-cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:780px){
@@ -96,7 +96,7 @@ td.num,th.num{text-align:right}
   <main class="main">
     <div class="top">
       <div><h1 id="pageTitle">Centro de Mando</h1><div class="muted">CICE — Centro de Inteligencia y Control Ejecutivo</div></div>
-      <div><div class="sync"><span class="sync-dot"></span>Sincronizado con Odoo</div><div class="stamp"><b>Última actualización</b><br><span id="updated">Cargando…</span></div></div>
+      <div class="stamp"><b>Última actualización</b><br><span id="updated">Cargando…</span></div>
     </div>
 
     <div id="status" class="card loading">Conectando con Odoo…</div>
@@ -107,6 +107,8 @@ td.num,th.num{text-align:right}
           <button class="command" data-open="inventory"><div class="icon">📦</div><div class="title">Inventarios</div><div class="desc">Existencias, mínimos y riesgos</div></button>
           <button class="command" data-open="production"><div class="icon">🏭</div><div class="title">Producción</div><div class="desc">Órdenes y avance del día</div></button>
           <button class="command" data-open="sales"><div class="icon">💰</div><div class="title">Ventas</div><div class="desc">Pedidos y facturación</div></button>
+          <button class="command" data-open="inventory"><div class="icon">🛒</div><div class="title">Compras</div><div class="desc">Próxima fase</div></button>
+          <button class="command" data-open="inventory"><div class="icon">🚚</div><div class="title">Logística</div><div class="desc">Próxima fase</div></button>
           <button class="command" data-open="alerts"><div class="icon">🚨</div><div class="title">Alertas</div><div class="desc">Prioridades del día</div></button>
         </div>
 
@@ -175,7 +177,7 @@ td.num,th.num{text-align:right}
         <article class="card" style="margin-top:16px">
           <div class="eyebrow">Categorías</div>
           <h2>Selecciona un almacén o categoría</h2>
-          <div id="categoryGroups" class="category-groups"></div>
+          <div id="categoryCards" class="category-grid"></div>
         </article>
 
         <article class="card" style="margin-top:16px">
@@ -233,23 +235,6 @@ td.num,th.num{text-align:right}
   </main>
 </div>
 
-
-<div id="productModal" class="modal hidden">
-  <div class="modal-card">
-    <div class="modal-head"><div><div class="eyebrow">Ficha individual del producto</div><h2 id="modalProductName"></h2><div id="modalProductMeta" class="muted"></div></div><button class="close" onclick="closeProduct()">Cerrar</button></div>
-    <div id="modalStatus" style="margin-top:14px"></div>
-    <div class="detail-grid">
-      <div class="detail-box"><div class="detail-label">Disponible</div><div class="detail-value" id="detailAvailable"></div></div>
-      <div class="detail-box"><div class="detail-label">A la mano</div><div class="detail-value" id="detailOnHand"></div></div>
-      <div class="detail-box"><div class="detail-label">Reservado</div><div class="detail-value" id="detailReserved"></div></div>
-      <div class="detail-box"><div class="detail-label">Stock mínimo</div><div class="detail-value" id="detailMinimum"></div></div>
-      <div class="detail-box"><div class="detail-label">Faltante</div><div class="detail-value" id="detailMissing"></div></div>
-      <div class="detail-box"><div class="detail-label">Cobertura</div><div class="detail-value" id="detailCoverage"></div></div>
-    </div>
-    <div class="card" style="margin-top:16px;box-shadow:none"><div class="eyebrow">Acción sugerida</div><div id="detailAction" style="font-size:18px;font-weight:900;margin-top:6px"></div></div>
-  </div>
-</div>
-
 <script>
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n||0));
 const num=n=>new Intl.NumberFormat('es-MX',{maximumFractionDigits:2}).format(Number(n||0));
@@ -278,20 +263,23 @@ function currentSummary(){
   if(selectedCategory==='TODOS')return DATA.inventory.global;
   return DATA.inventory.categories.find(c=>c.name===selectedCategory)||DATA.inventory.global;
 }
-function groupedCategories(){
-  const groups={};
-  DATA.inventory.categories.forEach(c=>{const g=c.group||'OTROS';if(!groups[g])groups[g]=[];groups[g].push(c);});
-  return groups;
-}
 function renderCategoryNav(){
-  const groups=groupedCategories();
-  categoryNav.innerHTML=Object.entries(groups).map(([group,cats])=>`<div class="nav-label">${group}</div>${cats.map(c=>`<button class="nav-btn" data-category="${c.name}">${c.name}</button>`).join('')}`).join('');
-  document.querySelectorAll('.nav-btn[data-category]').forEach(btn=>btn.onclick=()=>{selectedCategory=btn.dataset.category;openModule('inventory');renderInventory();});
+  categoryNav.innerHTML=DATA.inventory.categories.map(c=>`<button class="nav-btn" data-category="${c.name}">${c.name}</button>`).join('');
+  document.querySelectorAll('.nav-btn[data-category]').forEach(btn=>btn.onclick=()=>{
+    selectedCategory=btn.dataset.category;openModule('inventory');renderInventory();
+  });
 }
 function renderCategoryCards(){
-  const groups=groupedCategories();
-  categoryGroups.innerHTML=Object.entries(groups).map(([group,cats])=>`<div><div class="category-group-title">${group}</div><div class="category-grid">${cats.map(c=>{const cs=coverageStyle(c.coverage_pct);return `<div class="category-card" data-category="${c.name}"><div class="row"><div class="category-title">${c.name}</div><span class="pill ${cs.cls}">${c.coverage_pct===null?'—':num(c.coverage_pct)+'%'}</span></div><div class="category-sub">${c.products} productos · ${c.critical+c.below_minimum} por atender · ${num(c.available)} disponibles</div></div>`;}).join('')}</div></div>`).join('');
-  categoryGroups.querySelectorAll('.category-card').forEach(card=>card.onclick=()=>{selectedCategory=card.dataset.category;renderInventory();window.scrollTo({top:0,behavior:'smooth'});});
+  categoryCards.innerHTML=DATA.inventory.categories.map(c=>{
+    const cs=coverageStyle(c.coverage_pct);
+    return `<div class="category-card" data-category="${c.name}">
+      <div class="row"><div class="category-title">${c.name}</div><span class="pill ${cs.cls}">${c.coverage_pct===null?'—':num(c.coverage_pct)+'%'}</span></div>
+      <div class="category-sub">${c.products} productos · ${c.critical+c.below_minimum} por atender · ${num(c.available)} disponibles</div>
+    </div>`;
+  }).join('');
+  categoryCards.querySelectorAll('.category-card').forEach(card=>card.onclick=()=>{
+    selectedCategory=card.dataset.category;renderInventory();window.scrollTo({top:0,behavior:'smooth'});
+  });
 }
 function filteredProducts(){
   const search=searchInput.value.trim().toLowerCase(),state=statusFilter.value;
@@ -304,7 +292,7 @@ function filteredProducts(){
 }
 function renderProducts(){
   const products=filteredProducts();
-  productCards.innerHTML=products.map(p=>`<div class="product-card" data-product="${p.id}">
+  productCards.innerHTML=products.map(p=>`<div class="product-card">
     <div class="product-name">${p.name}</div><div class="product-code">${p.code||'Sin código'} · ${p.original_category||p.category}</div>
     <div style="margin-top:12px">${statusLabel(p.status)}</div>
     <div class="metric-line"><span>Disponible</span><b>${num(p.available)} ${p.uom||''}</b></div>
@@ -312,15 +300,13 @@ function renderProducts(){
     <div class="metric-line"><span>Faltante</span><b>${num(p.missing_to_minimum)} ${p.uom||''}</b></div>
     <div class="metric-line"><span>Cobertura</span><b>${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</b></div>
   </div>`).join('')||'<div class="muted">No hay productos para este filtro.</div>';
-  productCards.querySelectorAll('.product-card').forEach(card=>card.onclick=()=>openProduct(Number(card.dataset.product)));
 
-  productTable.innerHTML=products.map(p=>`<tr data-product="${p.id}">
+  productTable.innerHTML=products.map(p=>`<tr>
     <td>${p.code||'—'}</td><td><b>${p.name}</b></td><td>${p.original_category||p.category}</td>
     <td class="num">${num(p.available)} ${p.uom||''}</td><td class="num">${num(p.on_hand)} ${p.uom||''}</td>
     <td class="num">${num(p.reserved)} ${p.uom||''}</td><td class="num">${num(p.minimum)} ${p.uom||''}</td>
     <td class="num">${num(p.missing_to_minimum)} ${p.uom||''}</td><td class="num">${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</td>
     <td>${statusLabel(p.status)}</td></tr>`).join('')||'<tr><td colspan="10">No hay productos para este filtro.</td></tr>';
-  productTable.querySelectorAll('tr[data-product]').forEach(row=>row.onclick=()=>openProduct(Number(row.dataset.product)));
 }
 function renderInventory(){
   const s=currentSummary(),cs=coverageStyle(s.coverage_pct);
@@ -349,14 +335,6 @@ function renderHome(){
   recommendations.innerHTML=DATA.recommendations.map(r=>`<div class="recommendation ${r.priority==='ALTA'?'high':'medium'}">
     <div class="rec-title">${r.action}: ${r.product}</div><div>${r.message}</div><div class="rec-meta">${r.category} · Prioridad ${r.priority}</div></div>`).join('')||'<div class="muted">Sin recomendaciones urgentes.</div>';
 }
-function openProduct(id){
-  const p=DATA.inventory.products.find(x=>x.id===id);if(!p)return;
-  modalProductName.textContent=p.name;modalProductMeta.textContent=(p.code||'Sin código')+' · '+(p.original_category||p.category);
-  modalStatus.innerHTML=statusLabel(p.status);detailAvailable.textContent=num(p.available)+' '+(p.uom||'');detailOnHand.textContent=num(p.on_hand)+' '+(p.uom||'');detailReserved.textContent=num(p.reserved)+' '+(p.uom||'');detailMinimum.textContent=num(p.minimum)+' '+(p.uom||'');detailMissing.textContent=num(p.missing_to_minimum)+' '+(p.uom||'');detailCoverage.textContent=p.coverage_pct===null?'—':num(p.coverage_pct)+'%';
-  detailAction.textContent=p.status==='CRITICO'?'Acción inmediata: fabricar o reabastecer hoy.':p.status==='BAJO_MINIMO'?'Programar fabricación o compra.':p.status==='EN_RIESGO'?'Vigilar y programar reposición preventiva.':p.status==='SALUDABLE'?'Sin acción inmediata.':'Configurar stock mínimo en Odoo.';
-  productModal.classList.remove('hidden');
-}
-function closeProduct(){productModal.classList.add('hidden');}
 async function loadData(){
   status.hidden=false;dashboard.hidden=true;
   try{
@@ -374,7 +352,6 @@ document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
 cardsBtn.onclick=()=>{productView='cards';productCards.classList.remove('hidden');tableContainer.classList.add('hidden');cardsBtn.classList.add('active');tableBtn.classList.remove('active');};
 tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');tableContainer.classList.remove('hidden');tableBtn.classList.add('active');cardsBtn.classList.remove('active');};
-productModal.addEventListener('click',e=>{if(e.target===productModal)closeProduct();});
 loadData();setInterval(loadData,300000);
 </script>
 </body>
