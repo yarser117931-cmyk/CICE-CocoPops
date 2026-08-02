@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import Settings
@@ -40,7 +40,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="11.0.1",
+    version="12.0.0",
 )
 
 app.mount(
@@ -58,14 +58,76 @@ async def startup() -> None:
 
 @app.get("/")
 async def home() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(
+        STATIC_DIR / "index.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
+
+
+@app.get("/actualizar-cice", response_class=HTMLResponse)
+async def actualizar_cice() -> HTMLResponse:
+    """Elimina versiones antiguas guardadas por el navegador y abre CICE 12."""
+    return HTMLResponse(
+        """
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Actualizando CICE</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#fffaf7;color:#5c1028;
+         display:grid;place-items:center;min-height:100vh;margin:0;text-align:center}
+    .box{max-width:460px;padding:32px;border:1px solid #eadfda;border-radius:22px;
+         box-shadow:0 18px 45px rgba(92,16,40,.12);background:white}
+    .spinner{width:48px;height:48px;border:5px solid #eadfda;border-top-color:#861f41;
+             border-radius:50%;margin:0 auto 20px;animation:girar .8s linear infinite}
+    @keyframes girar{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="spinner"></div>
+    <h1>Actualizando CICE</h1>
+    <p>Estamos eliminando la versión anterior guardada en este dispositivo.</p>
+  </div>
+  <script>
+    (async () => {
+      try {
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(registration => registration.unregister()));
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(key => caches.delete(key)));
+        }
+        localStorage.removeItem('cice-version');
+        sessionStorage.clear();
+      } finally {
+        location.replace('/?version=12.0.0&actualizado=' + Date.now());
+      }
+    })();
+  </script>
+</body>
+</html>
+        """,
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Clear-Site-Data": '"cache"',
+        },
+    )
 
 
 @app.get("/api/health")
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "11.0.1",
+        "version": "12.0.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),

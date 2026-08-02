@@ -1,0 +1,51 @@
+CICE 12.0 — DISEÑO PREMIUM Y CORRECCIÓN DEFINITIVA DE CACHÉ
+==============================================================
+
+CAUSA DEL PROBLEMA
+------------------
+El navegador tenía instalado un Service Worker antiguo. Ese Service Worker
+entregaba permanentemente el diseño anterior, incluso después de que Render
+publicó correctamente la versión nueva.
+
+ESTA VERSIÓN
+------------
+- Conserva el diseño premium de Coco Pops.
+- Conserva la corrección psycopg[binary]==3.2.10.
+- Elimina el Service Worker antiguo.
+- Elimina las cachés anteriores.
+- Impide que la página principal se guarde en caché.
+- Muestra “CICE 12.0” junto a Powered by Odoo para confirmar la actualización.
+- Incluye una dirección especial para limpiar el dispositivo.
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio CICE-CocoPops.
+2. Abre GitHub Desktop.
+3. Summary:
+   CICE 12 diseño premium y corrección definitiva de caché
+4. Commit to main.
+5. Push origin.
+6. Espera a que Render muestre Deploy live.
+
+PASO OBLIGATORIO DESPUÉS DE QUE ESTÉ LIVE
+------------------------------------------
+Abre UNA SOLA VEZ esta dirección en cada dispositivo:
+
+https://cice-cocopops.onrender.com/actualizar-cice
+
+Hazlo:
+- Una vez en la computadora.
+- Una vez en el teléfono.
+
+La página borrará automáticamente la versión vieja y abrirá CICE 12.
+
+COMPROBACIÓN
+------------
+En el menú lateral, debajo de CICE, debe aparecer:
+Solo consulta · Powered by Odoo · CICE 12.0
+
+El endpoint:
+https://cice-cocopops.onrender.com/api/health
+
+debe mostrar:
+"version": "12.0.0"
