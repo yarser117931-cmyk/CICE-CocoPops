@@ -1,0 +1,25 @@
+CICE 10.1 — SINCRONIZACIÓN VISIBLE
+===================================
+
+MEJORAS
+-------
+- Botón "Actualizar ahora".
+- Estado visible:
+  Datos sincronizados / Error de conexión.
+- Hora exacta de la última actualización.
+- Tiempo aproximado de consulta a Odoo.
+- El sistema ya no muestra una banda de "Conectando con Odoo".
+- Durante la actualización, el botón cambia a "Actualizando...".
+- Si ocurre un error, aparece "Reintentar".
+
+PUBLICAR
+--------
+1. Descomprime este ZIP.
+2. Copia todo su contenido al repositorio CICE-CocoPops.
+3. Reemplaza los archivos.
+4. Abre GitHub Desktop.
+5. En Summary escribe:
+   Mejorar sincronización y actualización CICE 10.1
+6. Haz Commit to main.
+7. Haz Push origin.
+8. Espera el despliegue automático de Render.

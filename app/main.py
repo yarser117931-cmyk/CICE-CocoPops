@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+from time import perf_counter
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -39,7 +40,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="10.0.0",
+    version="10.1.0",
 )
 
 app.mount(
@@ -64,7 +65,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "10.0.0",
+        "version": "10.1.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
@@ -232,6 +233,7 @@ async def copilot(payload: dict[str, object]) -> dict[str, object]:
 
 @app.get("/api/dashboard")
 async def dashboard() -> dict[str, object]:
+    started_at = perf_counter()
     timezone = ZoneInfo(settings.timezone)
     now = datetime.now(timezone)
     start = now.replace(
@@ -273,6 +275,7 @@ async def dashboard() -> dict[str, object]:
 
     return {
         "generated_at": now.isoformat(),
+        "query_duration_ms": round((perf_counter() - started_at) * 1000),
         "source": {
             "url": settings.odoo_url,
             "database": settings.odoo_database,
