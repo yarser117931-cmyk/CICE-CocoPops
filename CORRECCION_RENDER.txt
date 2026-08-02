@@ -1,0 +1,29 @@
+CICE 11.0.1 — CORRECCIÓN DE DESPLIEGUE EN RENDER
+===================================================
+
+PROBLEMA DETECTADO
+------------------
+Render no pudo instalar:
+psycopg[binary]==3.2.9
+
+El registro mostró:
+No matching distribution found for psycopg-binary==3.2.9
+
+CORRECCIÓN
+----------
+Se actualizó a:
+psycopg[binary]==3.2.10
+
+PUBLICAR
+--------
+1. Copia todo el contenido del paquete a tu repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Corregir dependencia psycopg para Render CICE 11.0.1
+4. Commit to main.
+5. Push origin.
+6. Espera el nuevo despliegue.
+
+VERIFICACIÓN
+------------
+El evento de Render debe cambiar de Failed a Live.
