@@ -84,6 +84,12 @@ def executive_category(category_name: str) -> str:
     if "FABRICACION" in normalized:
         return "FABRICACIÓN / INGREDIENTES"
 
+    # Consolida todas las subcategorías operativas de paletas
+    # (65 gr, Gourmet, Healthy, Frescas y Nieve, etc.)
+    # en una sola categoría ejecutiva.
+    if "PALETA" in normalized:
+        return "PALETAS"
+
     return category_name
 
 
