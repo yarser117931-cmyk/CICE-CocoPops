@@ -74,6 +74,26 @@ td.num,th.num{text-align:right}
   .shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:14px}
   .command-grid,.grid,.category-grid,.product-cards,.section{grid-template-columns:1fr}.stamp{display:none}
 }
+
+.history-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.history-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+.history-value{font-size:34px;font-weight:900;margin-top:7px}
+.history-chart{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:16px}
+.chart-wrap{width:100%;overflow:auto}
+svg.chart{width:100%;height:280px;min-width:720px}
+.chart-axis{stroke:#d1d5db;stroke-width:1}
+.chart-line{fill:none;stroke:#7c3aed;stroke-width:4}
+.chart-line.secondary{stroke:#ef4444}
+.chart-dot{fill:#7c3aed}
+.chart-dot.secondary{fill:#ef4444}
+.chart-label{fill:#6b7280;font-size:11px}
+.history-table{width:100%;border-collapse:collapse;min-width:850px}
+.history-table th,.history-table td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px}
+.history-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.delta-up{color:#15803d}.delta-down{color:#b91c1c}.delta-flat{color:#6b7280}
+@media(max-width:1200px){.history-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:780px){.history-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -89,6 +109,7 @@ td.num,th.num{text-align:right}
     <button class="nav-btn" data-module="production">Producción</button>
     <button class="nav-btn" data-module="sales">Ventas</button>
     <button class="nav-btn" data-module="alerts">Alertas</button>
+<button class="nav-btn" data-module="history">Histórico</button>
     <div class="nav-label">Categorías de inventario</div>
     <div id="categoryNav"></div>
   </aside>
@@ -224,6 +245,86 @@ td.num,th.num{text-align:right}
         </section>
       </section>
 
+
+      <section id="historyView" class="hidden">
+        <article class="card">
+          <div class="row">
+            <div>
+              <div class="eyebrow">Histórico ejecutivo</div>
+              <h2>Tendencias y comparativos</h2>
+            </div>
+            <div class="history-tools">
+              <select id="historyCategory" class="filter">
+                <option value="TODOS">Todas las categorías</option>
+              </select>
+              <select id="historyDays" class="filter">
+                <option value="7">7 días</option>
+                <option value="30" selected>30 días</option>
+                <option value="90">90 días</option>
+                <option value="365">365 días</option>
+              </select>
+              <button id="historyRefresh" class="view-btn">Actualizar</button>
+              <button id="historyExport" class="view-btn">Exportar CSV</button>
+            </div>
+          </div>
+          <div id="historyNotice" class="muted"></div>
+        </article>
+
+        <div class="history-grid" style="margin-top:16px">
+          <div class="history-card">
+            <div class="eyebrow">Cobertura</div>
+            <div id="historyCoverage" class="history-value">—</div>
+            <div id="historyCoverageDelta" class="muted">Sin comparación</div>
+          </div>
+          <div class="history-card">
+            <div class="eyebrow">Inventario disponible</div>
+            <div id="historyAvailable" class="history-value">—</div>
+            <div id="historyAvailableDelta" class="muted">Sin comparación</div>
+          </div>
+          <div class="history-card">
+            <div class="eyebrow">Productos críticos</div>
+            <div id="historyCritical" class="history-value">—</div>
+            <div id="historyCriticalDelta" class="muted">Sin comparación</div>
+          </div>
+          <div class="history-card">
+            <div class="eyebrow">Ventas</div>
+            <div id="historySales" class="history-value">—</div>
+            <div id="historySalesDelta" class="muted">Sin comparación</div>
+          </div>
+        </div>
+
+        <article class="history-chart">
+          <div class="eyebrow">Tendencia</div>
+          <h2>Cobertura y productos críticos</h2>
+          <div class="chart-wrap">
+            <svg id="historyChart" class="chart" viewBox="0 0 1000 280" preserveAspectRatio="none"></svg>
+          </div>
+        </article>
+
+        <article class="card" style="margin-top:16px">
+          <div class="eyebrow">Detalle diario</div>
+          <h2>Evolución por fecha</h2>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th class="num">Disponible</th>
+                  <th class="num">Mínimo</th>
+                  <th class="num">Cobertura</th>
+                  <th class="num">Críticos</th>
+                  <th class="num">Bajo mínimo</th>
+                  <th class="num">Saludables</th>
+                  <th class="num">Producción</th>
+                  <th class="num">Ventas</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
       <section id="alertsView" class="hidden">
         <article class="card">
           <div class="eyebrow">Centro de alertas</div>
@@ -252,7 +353,7 @@ function statusLabel(status){
   return `<span class="status-dot ${item[1]}"></span>${item[0]}`;
 }
 function openModule(module){
-  ['home','inventory','production','sales','alerts'].forEach(name=>{
+  ['home','inventory','production','sales','alerts','history'].forEach(name=>{
     document.getElementById(name+'View').classList.toggle('hidden',name!==module);
   });
   const titles={home:'Centro de Inteligencia Empresarial',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
@@ -335,6 +436,97 @@ function renderHome(){
   recommendations.innerHTML=DATA.recommendations.map(r=>`<div class="recommendation ${r.priority==='ALTA'?'high':'medium'}">
     <div class="rec-title">${r.action}: ${r.product}</div><div>${r.message}</div><div class="rec-meta">${r.category} · Prioridad ${r.priority}</div></div>`).join('')||'<div class="muted">Sin recomendaciones urgentes.</div>';
 }
+
+function deltaClass(value, goodWhenPositive=true){
+  if(value===null||value===undefined)return 'delta-flat';
+  if(value===0)return 'delta-flat';
+  const good=goodWhenPositive?value>0:value<0;
+  return good?'delta-up':'delta-down';
+}
+function signed(value,suffix=''){
+  if(value===null||value===undefined)return 'Sin comparación';
+  const sign=value>0?'+':'';
+  return sign+num(value)+suffix;
+}
+function renderHistoryChart(points){
+  const svg=historyChart;
+  svg.innerHTML='';
+  if(!points.length){
+    svg.innerHTML='<text x="500" y="140" text-anchor="middle" class="chart-label">Todavía no hay datos históricos.</text>';
+    return;
+  }
+  const width=1000,height=280,pad=45;
+  const coverages=points.map(p=>Number(p.coverage_pct||0));
+  const criticals=points.map(p=>Number(p.critical||0));
+  const maxCoverage=Math.max(100,...coverages);
+  const maxCritical=Math.max(1,...criticals);
+  const x=i=>pad+(i*(width-pad*2)/Math.max(1,points.length-1));
+  const yCov=v=>height-pad-(v/maxCoverage)*(height-pad*2);
+  const yCrit=v=>height-pad-(v/maxCritical)*(height-pad*2);
+  let axes=`<line x1="${pad}" y1="${height-pad}" x2="${width-pad}" y2="${height-pad}" class="chart-axis"/>
+            <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height-pad}" class="chart-axis"/>`;
+  const covPath=points.map((p,i)=>(i?'L':'M')+x(i)+' '+yCov(Number(p.coverage_pct||0))).join(' ');
+  const critPath=points.map((p,i)=>(i?'L':'M')+x(i)+' '+yCrit(Number(p.critical||0))).join(' ');
+  let labels='';
+  points.forEach((p,i)=>{
+    if(i===0||i===points.length-1||i%Math.ceil(points.length/6)===0){
+      labels+=`<text x="${x(i)}" y="${height-12}" text-anchor="middle" class="chart-label">${p.date.slice(5)}</text>`;
+    }
+  });
+  svg.innerHTML=axes+
+    `<path d="${covPath}" class="chart-line"/>`+
+    `<path d="${critPath}" class="chart-line secondary"/>`+
+    labels+
+    `<text x="${pad+8}" y="${pad+4}" class="chart-label">Cobertura %</text>`+
+    `<text x="${width-pad-90}" y="${pad+4}" class="chart-label">Críticos</text>`;
+}
+async function loadHistory(){
+  const category=historyCategory.value;
+  const days=historyDays.value;
+  historyNotice.textContent='Consultando histórico...';
+  try{
+    const response=await fetch(`/api/history/summary?category=${encodeURIComponent(category)}&days=${days}`,{cache:'no-store'});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.detail||'No se pudo consultar el histórico.');
+    const points=result.points||[];
+    if(!result.enabled){
+      historyNotice.textContent='El Data Warehouse está preparado, pero DATABASE_URL todavía no está conectada.';
+    }else if(points.length<2){
+      historyNotice.textContent='El histórico está activo. Se necesitan al menos dos días para mostrar comparativos.';
+    }else{
+      historyNotice.textContent=`${points.length} registros disponibles para ${category}.`;
+    }
+    const last=points.length?points[points.length-1]:null;
+    const summary=result.summary||{};
+    historyCoverage.textContent=last&&last.coverage_pct!==null?num(last.coverage_pct)+'%':'—';
+    historyAvailable.textContent=last?num(last.available):'—';
+    historyCritical.textContent=last?num(last.critical):'—';
+    historySales.textContent=last?money(last.sales_total):'—';
+    historyCoverageDelta.textContent=signed(summary.coverage_change,' pts');
+    historyCoverageDelta.className=deltaClass(summary.coverage_change,true);
+    historyAvailableDelta.textContent=signed(summary.available_change);
+    historyAvailableDelta.className=deltaClass(summary.available_change,true);
+    historyCriticalDelta.textContent=signed(summary.critical_change);
+    historyCriticalDelta.className=deltaClass(summary.critical_change,false);
+    historySalesDelta.textContent=summary.sales_change===null?'Sin comparación':signed(summary.sales_change);
+    historySalesDelta.className=deltaClass(summary.sales_change,true);
+    renderHistoryChart(points);
+    historyTable.innerHTML=points.slice().reverse().map(p=>`<tr>
+      <td>${p.date}</td>
+      <td class="num">${num(p.available)}</td>
+      <td class="num">${num(p.minimum)}</td>
+      <td class="num">${p.coverage_pct===null?'—':num(p.coverage_pct)+'%'}</td>
+      <td class="num">${p.critical}</td>
+      <td class="num">${p.below_minimum}</td>
+      <td class="num">${p.healthy}</td>
+      <td class="num">${num(p.production_progress)}%</td>
+      <td class="num">${money(p.sales_total)}</td>
+    </tr>`).join('')||'<tr><td colspan="9">Todavía no hay registros históricos.</td></tr>';
+  }catch(error){
+    historyNotice.textContent='No se pudo consultar el histórico: '+error.message;
+  }
+}
+
 async function loadData(){
   status.className='hidden';dashboard.hidden=true;
   try{
@@ -344,6 +536,7 @@ async function loadData(){
     productionProgress.textContent=num(DATA.production.progress)+'%';productionOrders.textContent=DATA.production.orders;productionPlanned.textContent=num(DATA.production.planned);productionDone.textContent=num(DATA.production.done);
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
     renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();
+    historyCategory.innerHTML='<option value="TODOS">Todas las categorías</option>'+DATA.inventory.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
     status.className='hidden';dashboard.hidden=false;
   }catch(error){status.className='card error';status.innerHTML='<b>No se pudo actualizar la información.</b><br><br>'+error.message;dashboard.hidden=true;}
 }

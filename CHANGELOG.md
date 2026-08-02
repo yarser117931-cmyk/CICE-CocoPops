@@ -1,5 +1,14 @@
 # Historial de versiones de CICE
 
+## 8.0.0 — Histórico Ejecutivo
+- Nuevo módulo Histórico en el menú lateral.
+- Comparativos de 7, 30, 90 y 365 días.
+- Tendencias de cobertura, inventario, críticos, producción y ventas.
+- Gráfica ejecutiva.
+- Tabla diaria.
+- Exportación CSV por categoría.
+
+
 ## 7.0.0 — Data Warehouse
 - Modelo analítico por producto y categoría.
 - Fotografías diarias detalladas.

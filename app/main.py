@@ -37,7 +37,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="7.0.0",
+    version="8.0.0",
 )
 
 app.mount(
@@ -62,7 +62,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "7.0.0",
+        "version": "8.0.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
@@ -74,6 +74,91 @@ async def health() -> dict[str, object]:
 @app.get("/api/trends")
 async def get_trends(days: int = 30) -> dict[str, object]:
     return trends(days)
+
+
+
+
+def build_historical_summary(
+    category: str = "TODOS",
+    days: int = 30,
+) -> dict[str, object]:
+    points = executive_history(category=category, days=days)
+
+    if not points:
+        return {
+            "enabled": warehouse_enabled(),
+            "category": category,
+            "days": days,
+            "points": [],
+            "summary": {
+                "coverage_change": None,
+                "available_change": None,
+                "critical_change": None,
+                "sales_change": None,
+                "production_change": None,
+                "trend": "SIN_DATOS",
+            },
+        }
+
+    first = points[0]
+    last = points[-1]
+
+    first_coverage = first.get("coverage_pct")
+    last_coverage = last.get("coverage_pct")
+
+    coverage_change = None
+    if first_coverage is not None and last_coverage is not None:
+        coverage_change = round(last_coverage - first_coverage, 1)
+
+    critical_change = int(last.get("critical") or 0) - int(first.get("critical") or 0)
+    available_change = round(
+        float(last.get("available") or 0)
+        - float(first.get("available") or 0),
+        2,
+    )
+    sales_change = round(
+        float(last.get("sales_total") or 0)
+        - float(first.get("sales_total") or 0),
+        2,
+    )
+    production_change = round(
+        float(last.get("production_progress") or 0)
+        - float(first.get("production_progress") or 0),
+        1,
+    )
+
+    if coverage_change is None:
+        trend = "SIN_DATOS"
+    elif coverage_change > 3 and critical_change <= 0:
+        trend = "MEJORA"
+    elif coverage_change < -3 or critical_change > 0:
+        trend = "DETERIORO"
+    else:
+        trend = "ESTABLE"
+
+    return {
+        "enabled": warehouse_enabled(),
+        "category": category,
+        "days": days,
+        "points": points,
+        "summary": {
+            "coverage_change": coverage_change,
+            "available_change": available_change,
+            "critical_change": critical_change,
+            "sales_change": sales_change,
+            "production_change": production_change,
+            "trend": trend,
+        },
+    }
+
+
+
+@app.get("/api/history/summary")
+async def history_summary(
+    category: str = "TODOS",
+    days: int = 30,
+) -> dict[str, object]:
+    return build_historical_summary(category=category, days=days)
 
 
 @app.get("/api/warehouse/executive")

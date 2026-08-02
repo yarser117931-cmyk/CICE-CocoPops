@@ -1,0 +1,49 @@
+CICE 8.0 — MÓDULO HISTÓRICO EJECUTIVO
+=======================================
+
+NUEVO MÓDULO
+------------
+En el menú lateral aparecerá:
+
+HISTÓRICO
+
+Desde ahí la CEO podrá:
+- Seleccionar una categoría.
+- Comparar 7, 30, 90 o 365 días.
+- Ver cobertura actual y cambio del periodo.
+- Ver inventario disponible y variación.
+- Ver productos críticos y su evolución.
+- Ver ventas y producción.
+- Consultar el detalle diario.
+- Exportar el histórico a CSV para Excel.
+
+IMPORTANTE
+----------
+El módulo utiliza el Data Warehouse de CICE.
+
+Si DATABASE_URL no está conectada:
+- El tablero principal seguirá funcionando.
+- El módulo Histórico mostrará que falta activar almacenamiento.
+- No inventará datos ni mostrará tendencias falsas.
+
+Si DATABASE_URL está conectada:
+- Cada día se guarda una fotografía.
+- Después de dos días aparecen los primeros comparativos.
+- El valor del módulo aumenta conforme se acumulan datos.
+
+PUBLICAR
+--------
+1. Copia todo el contenido del paquete al repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Agregar módulo Histórico Ejecutivo CICE 8.0
+4. Commit to main.
+5. Push origin.
+6. Espera el despliegue automático de Render.
+
+VERIFICACIÓN
+------------
+Abre el tablero y selecciona Histórico en el menú lateral.
+
+También puedes abrir:
+https://cice-cocopops.onrender.com/api/history/summary?category=TODOS&days=30
