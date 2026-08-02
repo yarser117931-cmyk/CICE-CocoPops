@@ -12,6 +12,8 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import Settings
 from app.odoo import OdooClient
+from app.database import database_enabled, initialize_database
+from app.services.history import capture_snapshot, trends
 from app.services.intelligence import build_intelligence
 from app.services.inventory import build_inventory
 from app.services.production import build_production
@@ -27,7 +29,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="5.1.0",
+    version="6.0.0",
 )
 
 app.mount(
@@ -35,6 +37,11 @@ app.mount(
     StaticFiles(directory=STATIC_DIR),
     name="static",
 )
+
+
+@app.on_event("startup")
+async def startup() -> None:
+    initialize_database()
 
 
 @app.get("/")
@@ -46,11 +53,17 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "5.1.0",
-        "architecture": "modular",
+        "version": "6.0.0",
+        "architecture": "modular-with-history",
+        "database_enabled": database_enabled(),
         "odoo_url": settings.odoo_url,
         "database": settings.odoo_database,
     }
+
+
+@app.get("/api/trends")
+async def get_trends(days: int = 30) -> dict[str, object]:
+    return trends(days)
 
 
 @app.get("/api/dashboard")
@@ -74,6 +87,13 @@ async def dashboard() -> dict[str, object]:
         sales,
     )
 
+    history = capture_snapshot(
+        today=start.date(),
+        inventory=inventory,
+        production=production,
+        sales=sales,
+    )
+
     return {
         "generated_at": now.isoformat(),
         "source": {
@@ -83,5 +103,6 @@ async def dashboard() -> dict[str, object]:
         "inventory": inventory,
         "production": production,
         "sales": sales,
+        "history": history,
         **intelligence,
     }
