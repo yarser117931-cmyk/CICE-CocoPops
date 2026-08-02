@@ -1,17 +1,16 @@
 
-const CACHE_NAME = "cice-shell-v10-2";
-const SHELL = [
-  "/",
-  "/static/manifest.webmanifest",
-  "/static/icon-192.png",
-  "/static/icon-512.png",
-  "/static/apple-touch-icon.png",
-  "/static/cocopops-logo.jpg"
+const CACHE_NAME = "cice-v10-3-0";
+const STATIC_ASSETS = [
+  "/static/manifest.webmanifest?v=10.3.0",
+  "/static/icon-192.png?v=10.3.0",
+  "/static/icon-512.png?v=10.3.0",
+  "/static/apple-touch-icon.png?v=10.3.0",
+  "/static/cocopops-logo.png?v=10.3.0"
 ];
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
@@ -26,20 +25,37 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-  const url = new URL(event.request.url);
+  const request = event.request;
+  const url = new URL(request.url);
 
-  // Las APIs siempre deben traer datos actuales.
+  if (request.method !== "GET") return;
+
+  // Never cache live Odoo-backed data.
   if (url.pathname.startsWith("/api/")) {
-    event.respondWith(fetch(event.request));
+    event.respondWith(fetch(request, {cache: "no-store"}));
     return;
   }
 
-  // La interfaz puede abrirse con rapidez usando caché.
+  // Always try the newest HTML first, so updates appear on phone and PC.
+  if (request.mode === "navigate" || url.pathname === "/") {
+    event.respondWith(
+      fetch(request, {cache: "no-store"})
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put("/", copy));
+          return response;
+        })
+        .catch(() => caches.match("/"))
+    );
+    return;
+  }
+
+  // Static files: cache first, then network.
   event.respondWith(
-    caches.match(event.request).then(cached =>
-      cached || fetch(event.request).then(response => {
+    caches.match(request).then(cached =>
+      cached || fetch(request).then(response => {
         const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
         return response;
       })
     )

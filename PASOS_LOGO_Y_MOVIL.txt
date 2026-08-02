@@ -1,0 +1,41 @@
+CICE 10.3 — LOGOTIPO REAL Y ACTUALIZACIÓN MÓVIL
+=================================================
+
+Esta actualización se hizo directamente sobre el proyecto completo real.
+
+CAMBIOS
+-------
+- Logotipo real de Coco Pops visible en computadora y móvil.
+- Icono de Coco Pops al instalar CICE en la pantalla de inicio.
+- Botón circular ↻ visible tanto en PC como en móvil.
+- El botón consulta nuevamente Odoo.
+- La página principal usa prioridad de red para evitar mostrar una versión vieja.
+- Se cambió la versión del caché para obligar al navegador a actualizar.
+- Las APIs nunca se guardan en caché.
+
+PUBLICAR
+--------
+1. Descomprime el ZIP.
+2. Copia todo su contenido dentro de:
+   Documentos/GitHub/CICE-CocoPops
+3. Reemplaza los archivos existentes.
+4. Abre GitHub Desktop.
+5. Summary:
+   Corregir logotipo real y actualización móvil CICE 10.3
+6. Commit to main.
+7. Push origin.
+8. Espera a que Render termine el despliegue.
+
+MUY IMPORTANTE DESPUÉS DEL DESPLIEGUE
+-------------------------------------
+En computadora:
+- Abre CICE.
+- Presiona Ctrl + F5 una sola vez.
+
+En móvil, si ya habías instalado CICE:
+1. Elimina el icono antiguo de CICE de la pantalla de inicio.
+2. Abre el enlace en Safari o Chrome.
+3. Cierra y vuelve a abrir la página.
+4. Instala nuevamente “Agregar a pantalla de inicio”.
+
+Esto es necesario porque el móvil puede conservar la apariencia anterior.

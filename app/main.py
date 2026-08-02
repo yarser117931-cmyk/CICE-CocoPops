@@ -40,7 +40,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="10.2.0",
+    version="10.3.0",
 )
 
 app.mount(
@@ -65,7 +65,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "10.2.0",
+        "version": "10.3.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),

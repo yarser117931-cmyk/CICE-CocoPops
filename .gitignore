@@ -1,9 +1,6 @@
-*.pyc
-*.sqlite3
-.DS_Store
-.coverage
 .env
-.pytest_cache/
-.venv/
 __pycache__/
+*.pyc
+.venv/
 venv/
+.DS_Store
