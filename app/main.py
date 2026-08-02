@@ -18,6 +18,7 @@ from app.services.intelligence import build_intelligence
 from app.services.inventory import build_inventory
 from app.services.production import build_production
 from app.services.priorities import build_ceo_priorities
+from app.services.copilot import answer_question
 from app.services.sales import build_sales
 from app.services.warehouse import (
     executive_history,
@@ -38,7 +39,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="9.0.0",
+    version="10.0.0",
 )
 
 app.mount(
@@ -63,7 +64,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "9.0.0",
+        "version": "10.0.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
@@ -203,6 +204,29 @@ async def warehouse_export(
                 f'attachment; filename="cice-{category.lower()}-historico.csv"'
             )
         },
+    )
+
+
+
+@app.post("/api/copilot")
+async def copilot(payload: dict[str, object]) -> dict[str, object]:
+    timezone = ZoneInfo(settings.timezone)
+    now = datetime.now(timezone)
+    start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end = start + timedelta(days=1)
+
+    inventory = await build_inventory(odoo)
+    production = await build_production(odoo, start, end)
+    sales = await build_sales(odoo, start, end)
+    priorities = build_ceo_priorities(inventory, production, sales)
+
+    question = str(payload.get("question") or "")
+    return answer_question(
+        question,
+        inventory,
+        production,
+        sales,
+        priorities,
     )
 
 

@@ -1,5 +1,13 @@
 # Historial de versiones de CICE
 
+## 10.0.0 — Copiloto Ejecutivo
+- Nuevo módulo conversacional.
+- Preguntas sobre inventario, producción, ventas y prioridades.
+- Consulta datos actuales de Odoo.
+- Respuestas controladas sin modificar información.
+- Búsqueda básica por producto.
+
+
 ## 9.0.0 — Prioridades del CEO
 - Nuevo módulo Prioridades CEO.
 - Acciones clasificadas en urgentes, importantes y preventivas.

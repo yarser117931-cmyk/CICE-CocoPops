@@ -113,6 +113,22 @@ svg.chart{width:100%;height:280px;min-width:720px}
 @media(max-width:1100px){.priority-summary{grid-template-columns:repeat(2,1fr)}.priority-columns{grid-template-columns:1fr}}
 @media(max-width:700px){.priority-summary{grid-template-columns:1fr}}
 
+
+.copilot-layout{display:grid;grid-template-columns:1fr 360px;gap:16px}
+.copilot-chat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;min-height:520px;display:flex;flex-direction:column}
+.copilot-messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px}
+.message{max-width:86%;padding:12px 14px;border-radius:16px;line-height:1.5}
+.message.user{align-self:flex-end;background:#111827;color:#fff}
+.message.assistant{align-self:flex-start;background:#f3f4f6}
+.copilot-input{display:flex;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.copilot-input input{flex:1;border:1px solid var(--line);border-radius:12px;padding:12px}
+.copilot-send{border:0;background:#111827;color:#fff;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer}
+.suggested{display:grid;gap:10px}
+.suggested button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px;text-align:left;cursor:pointer;font-weight:700}
+.copilot-result-list{margin-top:10px;display:grid;gap:8px}
+.copilot-result-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+@media(max-width:1000px){.copilot-layout{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -130,6 +146,7 @@ svg.chart{width:100%;height:280px;min-width:720px}
     <button class="nav-btn" data-module="alerts">Alertas</button>
 <button class="nav-btn" data-module="history">Histórico</button>
 <button class="nav-btn" data-module="priorities">Prioridades CEO</button>
+<button class="nav-btn" data-module="copilot">Copiloto Ejecutivo</button>
     <div class="nav-label">Categorías de inventario</div>
     <div id="categoryNav"></div>
   </aside>
@@ -266,6 +283,46 @@ svg.chart{width:100%;height:280px;min-width:720px}
       </section>
 
 
+
+
+      <section id="copilotView" class="hidden">
+        <article class="card">
+          <div class="eyebrow">Copiloto Ejecutivo</div>
+          <h2>Pregunta directamente sobre la operación</h2>
+          <p class="muted">
+            El copiloto responde con datos actuales de Odoo. Esta primera versión
+            utiliza reglas controladas y no modifica información.
+          </p>
+        </article>
+
+        <div class="copilot-layout" style="margin-top:16px">
+          <div class="copilot-chat">
+            <div id="copilotMessages" class="copilot-messages">
+              <div class="message assistant">
+                Hola. Puedo ayudarte con inventario, producción, ventas,
+                productos críticos, compras y prioridades de fabricación.
+              </div>
+            </div>
+            <form id="copilotForm" class="copilot-input">
+              <input id="copilotQuestion" placeholder="Ejemplo: ¿Qué debo fabricar hoy?">
+              <button class="copilot-send" type="submit">Preguntar</button>
+            </form>
+          </div>
+
+          <article class="card">
+            <div class="eyebrow">Preguntas sugeridas</div>
+            <h2>Empieza aquí</h2>
+            <div class="suggested">
+              <button data-question="¿Qué debo fabricar hoy?">¿Qué debo fabricar hoy?</button>
+              <button data-question="¿Qué debo comprar o reabastecer?">¿Qué debo comprar?</button>
+              <button data-question="¿Cuáles son los productos críticos?">Productos críticos</button>
+              <button data-question="¿Qué categoría requiere más atención?">Categoría con más riesgo</button>
+              <button data-question="¿Cómo van las ventas de hoy?">Ventas de hoy</button>
+              <button data-question="¿Cómo va la producción?">Producción de hoy</button>
+            </div>
+          </article>
+        </div>
+      </section>
 
       <section id="prioritiesView" class="hidden">
         <article class="card">
@@ -428,7 +485,7 @@ function statusLabel(status){
   return `<span class="status-dot ${item[1]}"></span>${item[0]}`;
 }
 function openModule(module){
-  ['home','inventory','production','sales','alerts','history','priorities'].forEach(name=>{
+  ['home','inventory','production','sales','alerts','history','priorities','copilot'].forEach(name=>{
     document.getElementById(name+'View').classList.toggle('hidden',name!==module);
   });
   const titles={home:'Centro de Inteligencia Empresarial',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
@@ -602,6 +659,46 @@ async function loadHistory(){
   }
 }
 
+
+
+function appendCopilotMessage(role, html){
+  const div=document.createElement('div');
+  div.className='message '+role;
+  div.innerHTML=html;
+  copilotMessages.appendChild(div);
+  copilotMessages.scrollTop=copilotMessages.scrollHeight;
+}
+function copilotItemsHtml(items){
+  if(!items||!items.length)return '';
+  return `<div class="copilot-result-list">${items.map(item=>`
+    <div class="copilot-result-item">
+      <b>${item.name||item.category||''}</b>
+      ${item.category?`<div class="muted">${item.category}</div>`:''}
+      ${item.available!==undefined?`<div>Disponible: ${num(item.available)} ${item.uom||''}</div>`:''}
+      ${item.minimum!==undefined?`<div>Mínimo: ${num(item.minimum)} ${item.uom||''}</div>`:''}
+      ${item.missing!==undefined?`<div>Faltante: ${num(item.missing)} ${item.uom||''}</div>`:''}
+    </div>`).join('')}</div>`;
+}
+async function askCopilot(question){
+  const text=(question||'').trim();
+  if(!text)return;
+  appendCopilotMessage('user',text);
+  copilotQuestion.value='';
+  appendCopilotMessage('assistant','Consultando información actual de Odoo...');
+  const loading=copilotMessages.lastElementChild;
+  try{
+    const response=await fetch('/api/copilot',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:text})
+    });
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.detail||'No se pudo obtener una respuesta.');
+    loading.innerHTML=result.answer+copilotItemsHtml(result.items);
+  }catch(error){
+    loading.innerHTML='No pude responder en este momento: '+error.message;
+  }
+}
 
 function priorityItemHtml(item, cssClass){
   const productData=item.product_id!==undefined&&item.product_id!==null
