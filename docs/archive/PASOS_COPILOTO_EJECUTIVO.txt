@@ -1,0 +1,47 @@
+CICE 10.0 — COPILOTO EJECUTIVO
+================================
+
+NUEVO MÓDULO
+------------
+En el menú aparecerá:
+
+COPILOTO EJECUTIVO
+
+La CEO podrá preguntar:
+
+- ¿Qué debo fabricar hoy?
+- ¿Qué debo comprar o reabastecer?
+- ¿Cuáles son los productos críticos?
+- ¿Qué categoría requiere más atención?
+- ¿Cómo van las ventas?
+- ¿Cómo va la producción?
+- ¿Cómo está el inventario?
+- También puede escribir el nombre de un producto.
+
+CÓMO FUNCIONA
+-------------
+Esta primera versión consulta datos reales de Odoo y utiliza reglas
+controladas. No usa todavía un modelo externo de IA.
+
+Ventajas:
+- Las respuestas son previsibles.
+- No inventa información.
+- No modifica Odoo.
+- No crea órdenes ni compras.
+- Funciona sin agregar otra clave de API.
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Agregar Copiloto Ejecutivo CICE 10.0
+4. Commit to main.
+5. Push origin.
+6. Espera el despliegue automático de Render.
+
+SIGUIENTE ETAPA
+---------------
+Después de validar las preguntas reales de la CEO, se puede conectar
+un modelo de lenguaje para entender preguntas más abiertas. Esa etapa
+necesitará una clave de proveedor de IA y controles adicionales.

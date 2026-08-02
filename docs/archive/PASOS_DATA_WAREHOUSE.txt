@@ -1,0 +1,72 @@
+CICE 7.0 — DATA WAREHOUSE
+===========================
+
+QUÉ ES
+------
+Esta versión separa la información histórica en un modelo analítico:
+
+1. Dimensión de productos.
+2. Historial diario producto por producto.
+3. Historial diario por categoría ejecutiva.
+4. Métricas de producción y ventas.
+5. Exportación CSV para Excel o Power BI.
+
+IMPORTANTE
+----------
+Un Data Warehouse necesita almacenamiento persistente.
+
+El servicio gratuito de Render no conserva archivos locales de forma
+confiable después de reinicios. Por eso esta versión está preparada para
+conectarse a cualquier PostgreSQL mediante DATABASE_URL.
+
+Sin DATABASE_URL:
+- El tablero sigue funcionando.
+- No se guardan históricos persistentes.
+- Los endpoints históricos responden vacíos de forma segura.
+
+Con DATABASE_URL:
+- Se guarda una fotografía diaria por producto y categoría.
+- No se modifica Odoo.
+- CICE empieza a acumular memoria histórica.
+
+ENDPOINTS
+---------
+Estado:
+https://cice-cocopops.onrender.com/api/health
+
+Histórico ejecutivo:
+https://cice-cocopops.onrender.com/api/warehouse/executive?category=TODOS&days=90
+
+Histórico de un producto:
+https://cice-cocopops.onrender.com/api/warehouse/inventory?product_id=123&days=90
+
+Exportar CSV:
+https://cice-cocopops.onrender.com/api/warehouse/export.csv?category=TODOS&days=365
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Crear Data Warehouse CICE 7.0
+4. Commit to main.
+5. Push origin.
+6. Espera el despliegue de Render.
+
+ACTIVAR ALMACENAMIENTO
+----------------------
+Hay que proporcionar una DATABASE_URL de PostgreSQL.
+
+Puede ser:
+- PostgreSQL de Render.
+- Otro proveedor de PostgreSQL.
+- Un servidor administrado por la empresa.
+
+No coloques la contraseña de la base dentro de GitHub.
+DATABASE_URL debe guardarse como variable secreta en Render.
+
+ACLARACIÓN
+----------
+Esta versión crea la arquitectura del Data Warehouse, pero no puede
+inventar almacenamiento gratuito persistente dentro de Render. Para
+guardar datos durante meses hace falta conectar una base persistente.

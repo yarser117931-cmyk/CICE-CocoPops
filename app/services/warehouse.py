@@ -10,13 +10,12 @@ from sqlalchemy import (
     Date,
     DateTime,
     Float,
-    ForeignKey,
     Integer,
     String,
     UniqueConstraint,
     select,
 )
-from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Session, mapped_column
 
 from app.database import Base, engine
 
@@ -173,24 +172,25 @@ def save_warehouse_snapshot(
                 )
             ).scalar_one_or_none()
 
+            values = {
+                "available": float(product.get("available") or 0),
+                "on_hand": float(product.get("on_hand") or 0),
+                "reserved": float(product.get("reserved") or 0),
+                "minimum": float(product.get("minimum") or 0),
+                "maximum": float(product.get("maximum") or 0),
+                "missing_to_minimum": float(product.get("missing_to_minimum") or 0),
+                "coverage_pct": product.get("coverage_pct"),
+                "status": product.get("status") or "SIN_DATOS",
+            }
             if existing is None:
-                session.add(
-                    FactInventoryDaily(
-                        snapshot_date=snapshot_date,
-                        odoo_product_id=product_id,
-                        available=float(product.get("available") or 0),
-                        on_hand=float(product.get("on_hand") or 0),
-                        reserved=float(product.get("reserved") or 0),
-                        minimum=float(product.get("minimum") or 0),
-                        maximum=float(product.get("maximum") or 0),
-                        missing_to_minimum=float(
-                            product.get("missing_to_minimum") or 0
-                        ),
-                        coverage_pct=product.get("coverage_pct"),
-                        status=product.get("status") or "SIN_DATOS",
-                    )
+                existing = FactInventoryDaily(
+                    snapshot_date=snapshot_date,
+                    odoo_product_id=product_id,
                 )
+                session.add(existing)
                 saved_products += 1
+            for field, value in values.items():
+                setattr(existing, field, value)
 
         for category in categories:
             category_name = category.get("name") or "TODOS"
@@ -202,46 +202,37 @@ def save_warehouse_snapshot(
                 )
             ).scalar_one_or_none()
 
+            values = {
+                "products": int(category.get("products") or 0),
+                "products_with_minimum": int(category.get("products_with_minimum") or 0),
+                "available": float(category.get("available") or 0),
+                "on_hand": float(category.get("on_hand") or 0),
+                "reserved": float(category.get("reserved") or 0),
+                "minimum": float(category.get("minimum") or 0),
+                "coverage_pct": category.get("coverage_pct"),
+                "critical": int(category.get("critical") or 0),
+                "below_minimum": int(category.get("below_minimum") or 0),
+                "at_risk": int(category.get("at_risk") or 0),
+                "healthy": int(category.get("healthy") or 0),
+                "without_minimum": int(category.get("without_minimum") or 0),
+                "production_orders": int(production.get("orders") or 0),
+                "production_planned": float(production.get("planned") or 0),
+                "production_done": float(production.get("done") or 0),
+                "production_progress": float(production.get("progress") or 0),
+                "sales_total": float(sales.get("total") or 0),
+                "sales_orders": int(sales.get("orders") or 0),
+                "sales_customers": int(sales.get("customers") or 0),
+                "invoiced_today": float(sales.get("invoiced_today") or 0),
+            }
             if existing is None:
-                session.add(
-                    FactExecutiveDaily(
-                        snapshot_date=snapshot_date,
-                        category_name=category_name,
-                        products=int(category.get("products") or 0),
-                        products_with_minimum=int(
-                            category.get("products_with_minimum") or 0
-                        ),
-                        available=float(category.get("available") or 0),
-                        on_hand=float(category.get("on_hand") or 0),
-                        reserved=float(category.get("reserved") or 0),
-                        minimum=float(category.get("minimum") or 0),
-                        coverage_pct=category.get("coverage_pct"),
-                        critical=int(category.get("critical") or 0),
-                        below_minimum=int(
-                            category.get("below_minimum") or 0
-                        ),
-                        at_risk=int(category.get("at_risk") or 0),
-                        healthy=int(category.get("healthy") or 0),
-                        without_minimum=int(
-                            category.get("without_minimum") or 0
-                        ),
-                        production_orders=int(production.get("orders") or 0),
-                        production_planned=float(
-                            production.get("planned") or 0
-                        ),
-                        production_done=float(production.get("done") or 0),
-                        production_progress=float(
-                            production.get("progress") or 0
-                        ),
-                        sales_total=float(sales.get("total") or 0),
-                        sales_orders=int(sales.get("orders") or 0),
-                        sales_customers=int(sales.get("customers") or 0),
-                        invoiced_today=float(
-                            sales.get("invoiced_today") or 0
-                        ),
-                    )
+                existing = FactExecutiveDaily(
+                    snapshot_date=snapshot_date,
+                    category_name=category_name,
                 )
+                session.add(existing)
                 saved_categories += 1
+            for field, value in values.items():
+                setattr(existing, field, value)
 
         session.commit()
 

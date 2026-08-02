@@ -1,0 +1,62 @@
+CICE COCO POPS — ARQUITECTURA MODULAR 5.0
+==========================================
+
+Esta versión reorganiza el proyecto para que pueda crecer sin convertir
+el archivo principal en un bloque difícil de mantener.
+
+MÓDULOS
+-------
+app/config.py
+- Configuración y variables de entorno.
+
+app/odoo.py
+- Conexión segura con Odoo.
+
+app/helpers.py
+- Reglas comunes, relaciones y categorías ejecutivas.
+
+app/services/inventory.py
+- Inventario, mínimos, cobertura, categorías y productos.
+
+app/services/production.py
+- Órdenes de fabricación y avance diario.
+
+app/services/sales.py
+- Pedidos confirmados y facturación.
+
+app/services/intelligence.py
+- Alertas, recomendaciones y resumen ejecutivo.
+
+app/main.py
+- Une los módulos y publica la API.
+
+IMPORTANTE
+----------
+Esta versión mejora la arquitectura y conserva las funciones actuales.
+Todavía no guarda historial permanente ni usa un modelo externo de IA.
+Las recomendaciones siguen siendo reglas automáticas basadas en datos
+reales de Odoo. El historial requiere una base de datos persistente,
+que puede añadirse en la siguiente fase.
+
+INSTALACIÓN
+-----------
+1. Descomprime este ZIP.
+2. Copia la carpeta app completa.
+3. Pégala en:
+   Documentos/GitHub/CICE-CocoPops
+4. Reemplaza la carpeta y sus archivos.
+5. Abre GitHub Desktop.
+6. En Summary escribe:
+   Arquitectura modular CICE 5.0
+7. Haz Commit to main.
+8. Haz Push origin.
+9. Espera el despliegue automático de Render.
+
+VERIFICACIÓN
+------------
+Después del despliegue abre:
+https://cice-cocopops.onrender.com/api/health
+
+Debe aparecer:
+"version": "5.0.0"
+"architecture": "modular"

@@ -1,0 +1,73 @@
+CICE 6.0 — HISTÓRICOS Y TENDENCIAS
+===================================
+
+Esta versión prepara una memoria propia para CICE.
+
+QUÉ GUARDA CADA DÍA
+-------------------
+- Inventario disponible, a la mano, reservado y mínimo.
+- Productos críticos, bajo mínimo, en riesgo y saludables.
+- Avance de producción.
+- Ventas, pedidos, clientes y facturación.
+
+No modifica información de Odoo.
+
+PRIMER PASO: PUBLICAR EL CÓDIGO
+-------------------------------
+1. Copia todo el contenido de este paquete al repositorio.
+2. Abre GitHub Desktop.
+3. Summary:
+   Agregar históricos y tendencias CICE 6.0
+4. Commit to main.
+5. Push origin.
+6. Espera a que Render termine.
+
+El tablero seguirá funcionando incluso antes de crear la base de datos.
+
+SEGUNDO PASO: CREAR POSTGRES EN RENDER
+--------------------------------------
+1. Abre Render.
+2. Haz clic en New.
+3. Selecciona Postgres.
+4. Nombre:
+   cice-coco-pops-db
+5. Database:
+   cice
+6. User:
+   cice
+7. Usa la misma región que CICE.
+8. Elige el plan disponible de menor costo.
+9. Haz clic en Create Database.
+
+TERCER PASO: CONECTAR LA BASE
+-----------------------------
+1. Abre la base creada.
+2. Copia Internal Database URL.
+3. Abre el servicio CICE-CocoPops.
+4. Entra a Environment.
+5. Agrega:
+   DATABASE_URL
+6. Pega como valor la Internal Database URL.
+7. Guarda.
+
+VERIFICACIÓN
+------------
+Abre:
+https://cice-cocopops.onrender.com/api/health
+
+Debe mostrar:
+"version": "6.0.0"
+"database_enabled": true
+
+TENDENCIAS
+----------
+Abre:
+https://cice-cocopops.onrender.com/api/trends?days=30
+
+Al principio solo habrá uno o pocos registros. El valor del histórico
+aumentará conforme pasen los días.
+
+NOTA
+----
+Todavía no se calcula riesgo económico. Primero debemos decidir si debe
+medirse con costo, precio de venta, margen o ventas históricas.

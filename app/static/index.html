@@ -780,10 +780,10 @@ function formatSyncMeta(generatedAt,durationMs){
   return `Actualizado: ${when} · Consulta: ${seconds} s`;
 }
 
-async function loadData(){
+async function loadData(force=false){
   status.className='hidden';dashboard.hidden=true;
   try{
-    const response=await fetch('/api/dashboard',{cache:'no-store'});
+    const response=await fetch('/api/dashboard'+(force?'?refresh=true':''),{cache:'no-store'});
     DATA=await response.json();if(!response.ok)throw new Error(DATA.detail||'No fue posible consultar Odoo.');
     syncMeta.textContent=formatSyncMeta(DATA.generated_at,DATA.query_duration_ms);
     setSyncState('ok','Datos sincronizados');
