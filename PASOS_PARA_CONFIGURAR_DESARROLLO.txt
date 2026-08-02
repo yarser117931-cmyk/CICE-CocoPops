@@ -1,0 +1,37 @@
+CICE — CONFIGURAR ENTORNO DE DESARROLLO
+========================================
+
+OBJETIVO
+--------
+Tener dos versiones:
+
+1. PRODUCCIÓN:
+   La que usa la CEO y ya está en Render.
+
+2. DESARROLLO:
+   Una copia privada para probar cambios antes de publicarlos.
+
+PRIMER PASO EN GITHUB DESKTOP
+-----------------------------
+1. Abre GitHub Desktop.
+2. Arriba busca el botón que dice:
+   Current branch: main
+3. Haz clic.
+4. Haz clic en:
+   New branch
+5. Escribe:
+   desarrollo
+6. Haz clic en:
+   Create branch
+7. Haz clic en:
+   Publish branch
+
+No borres la rama main.
+
+DESPUÉS
+-------
+La nueva carpeta .github hará validaciones automáticas cuando publiques
+cambios. No contiene contraseñas ni modifica Odoo.
+
+Para crear la página de pruebas en Render se usará después la rama
+"desarrollo". No cambies todavía el servicio de producción.

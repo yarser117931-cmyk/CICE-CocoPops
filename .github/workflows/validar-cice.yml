@@ -1,0 +1,29 @@
+name: Validar CICE
+
+on:
+  push:
+    branches: [main, desarrollo]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Revisar sintaxis
+        run: python -m compileall app
+
+      - name: Ejecutar pruebas
+        run: python -m unittest discover -s tests -v

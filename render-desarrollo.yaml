@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: cice-coco-pops-desarrollo
+    runtime: python
+    branch: desarrollo
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: ODOO_URL
+        value: https://cocopopsmx1.odoo.com
+      - key: ODOO_DATABASE
+        value: cocopopsmx1
+      - key: ODOO_API_KEY
+        sync: false
+      - key: TIMEZONE
+        value: America/Chihuahua

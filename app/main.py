@@ -27,7 +27,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="5.0.0",
+    version="5.1.0",
 )
 
 app.mount(
@@ -46,7 +46,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "5.0.0",
+        "version": "5.1.0",
         "architecture": "modular",
         "odoo_url": settings.odoo_url,
         "database": settings.odoo_database,
