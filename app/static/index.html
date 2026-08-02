@@ -188,11 +188,189 @@ svg.chart{width:100%;height:280px;min-width:720px}
   .main{padding-bottom:100px}
 }
 
+
+/* ===== CICE PREMIUM EXECUTIVE 11.0 ===== */
+:root{
+  --bg:#f7f2ef;
+  --card:#ffffff;
+  --text:#25151a;
+  --muted:#78676d;
+  --line:#eadfda;
+  --green:#24954f;
+  --amber:#c98a1d;
+  --red:#c23939;
+  --orange:#e66d3a;
+  --purple:#861f41;
+  --nav:#ffffff;
+  --blue:#2563eb;
+  --burgundy:#861f41;
+  --burgundy-dark:#5c1028;
+  --cream:#fffaf7;
+  --gold:#d6ad63;
+}
+body{
+  background:linear-gradient(180deg,#fff 0,#f7f2ef 72%);
+  color:var(--text);
+}
+.shell{grid-template-columns:270px 1fr;max-width:none}
+.sidebar{
+  background:#fff;color:var(--text);padding:22px 18px;
+  border-right:1px solid var(--line);
+  box-shadow:8px 0 30px rgba(73,31,44,.05);
+  z-index:60;
+}
+.logo-wrap{
+  display:block;text-align:center;margin:0 -4px 24px;padding-bottom:20px;
+  border-bottom:1px solid var(--line)
+}
+.brand-logo-img{
+  width:184px;height:auto;max-height:116px;border:0;border-radius:0;
+  box-shadow:none;object-fit:contain;background:transparent
+}
+.brand-title{font-size:27px;color:var(--burgundy);margin-top:10px}
+.brand-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.nav-label{color:#a78b95;margin-left:15px}
+.nav-btn{
+  color:#2f2528;padding:13px 15px;border-radius:11px;font-weight:700;
+  display:flex;align-items:center;gap:10px
+}
+.nav-btn:hover{background:#fbf2f5;color:var(--burgundy)}
+.nav-btn.active{
+  background:linear-gradient(135deg,var(--burgundy),#a0234f);
+  color:#fff;box-shadow:0 10px 20px rgba(134,31,65,.2)
+}
+.main{padding:0;max-width:none;margin:0;min-width:0}
+.top{
+  height:82px;margin:0;padding:0 26px;background:#fff;
+  border-bottom:1px solid var(--line);position:sticky;top:0;z-index:45
+}
+.top h1{font-size:16px;color:var(--burgundy);display:inline}
+.top .muted{display:inline;margin-left:8px;color:#30262a}
+.top-title-wrap{display:flex;align-items:center;gap:10px}
+.menu-toggle{
+  width:42px;height:42px;border:0;background:transparent;
+  color:var(--burgundy);font-size:28px;cursor:pointer;display:none
+}
+.stamp{border:0;box-shadow:none;padding:0;background:transparent}
+.sync-panel{gap:15px}.refresh-btn{
+  color:var(--burgundy);border:0;background:transparent;font-size:14px
+}
+#dashboard{padding:0}
+#homeView{min-height:calc(100vh - 82px)}
+.premium-hero{
+  position:relative;min-height:calc(100vh - 82px);
+  background:
+    linear-gradient(90deg,#fffdfb 0%,#fffdfb 24%,rgba(255,253,251,.96) 34%,rgba(255,253,251,.25) 61%,rgba(255,253,251,0) 76%),
+    url('/static/cocopops-fashion-mall-hero.jpg?v=11.0.0') center right/cover no-repeat;
+  overflow:hidden;padding:56px 34px 34px;
+  display:flex;flex-direction:column;justify-content:space-between
+}
+.premium-hero:after{
+  content:"";position:absolute;inset:auto 0 0;height:34%;
+  background:linear-gradient(180deg,transparent,rgba(78,18,37,.84));
+  pointer-events:none
+}
+.hero-copy{position:relative;z-index:2;max-width:500px}
+.hero-quote{
+  color:var(--burgundy-dark);font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(42px,5.2vw,78px);line-height:.99;margin:0;
+  letter-spacing:-.045em
+}
+.hero-quote .script{
+  display:block;font-family:'Segoe Script','Brush Script MT',cursive;
+  font-size:.76em;font-weight:400;line-height:1.05;margin-top:12px
+}
+.hero-brand-mark{width:230px;max-width:55%;margin-top:26px}
+.hero-values{
+  position:relative;z-index:3;align-self:center;width:min(900px,90%);
+  background:rgba(104,25,49,.9);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.18);border-radius:16px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:18px 20px;color:#fff;margin-top:80px
+}
+.hero-value{display:flex;gap:12px;align-items:center;padding:0 16px;border-right:1px solid rgba(255,255,255,.25)}
+.hero-value:last-child{border-right:0}
+.hero-value-icon{font-size:29px;color:#f2ce82}
+.hero-value b{display:block}.hero-value small{opacity:.87}
+.hero-kpis{
+  position:relative;z-index:3;display:grid;grid-template-columns:repeat(5,1fr);
+  gap:10px;margin-top:12px
+}
+.hero-kpi{
+  background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.7);
+  border-radius:16px;padding:17px 18px;min-height:130px;
+  box-shadow:0 14px 32px rgba(48,14,26,.15)
+}
+.hero-kpi .kpi-title{font-size:13px;color:#44363b;display:flex;gap:8px;align-items:center}
+.hero-kpi .kpi-icon{font-size:24px;color:var(--burgundy)}
+.hero-kpi .kpi-value{font-size:29px;font-weight:900;margin:10px 0 4px;color:#151014}
+.hero-kpi .kpi-note{font-size:12px;color:var(--muted)}
+.hero-kpi.priority .kpi-value{font-size:18px;line-height:1.18}
+.hero-update{
+  position:relative;z-index:3;color:#fff;text-align:center;
+  font-size:13px;margin-top:12px
+}
+#companyBanner{
+  position:absolute;left:34px;bottom:28px;z-index:4;
+  max-width:440px;margin:0;border-radius:14px;padding:12px 15px;
+  opacity:0;pointer-events:none
+}
+.home-details{padding:22px 26px 34px;background:#f7f2ef}
+.home-details .section{margin-top:0}
+.card,.command,.category-card,.product-card,.priority-column,.history-card,.history-chart{
+  border-color:var(--line);box-shadow:0 12px 28px rgba(77,40,51,.06)
+}
+.mobile-refresh{background:var(--burgundy)}
+#status{margin:20px}
+#inventoryView,#productionView,#salesView,#alertsView,#historyView,#prioritiesView,#copilotView{
+  padding:24px 26px 42px
+}
+@media(max-width:1180px){
+  .hero-kpis{grid-template-columns:repeat(3,1fr)}
+  .hero-values{grid-template-columns:repeat(2,1fr)}
+  .hero-value:nth-child(2){border-right:0}
+}
+@media(max-width:780px){
+  .shell{display:block}
+  .sidebar{
+    position:fixed;top:0;bottom:0;left:0;width:285px;height:100vh;
+    transform:translateX(-105%);transition:.25s ease;z-index:100;
+    overflow:auto
+  }
+  .sidebar.open{transform:translateX(0)}
+  .menu-toggle{display:block}
+  .top{height:68px;padding:0 12px}
+  .top-title-wrap{min-width:0}
+  .top h1{font-size:14px}.top .muted{display:none}
+  .sync-meta{display:none}.syncText{font-size:11px}
+  .premium-hero{
+    min-height:calc(100vh - 68px);padding:30px 16px 20px;
+    background:
+      linear-gradient(180deg,rgba(255,253,251,.98) 0%,rgba(255,253,251,.88) 34%,rgba(255,253,251,.08) 59%,rgba(72,17,35,.24) 100%),
+      url('/static/cocopops-fashion-mall-hero.jpg?v=11.0.0') 67% center/cover no-repeat
+  }
+  .hero-copy{max-width:100%}
+  .hero-quote{font-size:42px;max-width:310px}
+  .hero-brand-mark{width:160px;margin-top:18px}
+  .hero-values{grid-template-columns:1fr 1fr;width:100%;margin-top:140px;padding:12px 8px}
+  .hero-value{padding:8px;border-right:0;border-bottom:1px solid rgba(255,255,255,.18)}
+  .hero-value:nth-last-child(-n+2){border-bottom:0}
+  .hero-value-icon{font-size:22px}.hero-value small{font-size:11px}
+  .hero-kpis{
+    grid-template-columns:1fr 1fr;gap:8px;margin-top:10px
+  }
+  .hero-kpi{min-height:104px;padding:13px}
+  .hero-kpi:last-child{grid-column:1/-1}
+  .hero-kpi .kpi-value{font-size:23px}
+  .home-details{padding:16px 12px 95px}
+  #inventoryView,#productionView,#salesView,#alertsView,#historyView,#prioritiesView,#copilotView{padding:16px 12px 95px}
+}
+
 </style>
 
-<link rel="manifest" href="/static/manifest.webmanifest?v=10.3.0">
-<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=10.3.0">
-<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=10.3.0">
+<link rel="manifest" href="/static/manifest.webmanifest?v=11.0.0">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=11.0.0">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=11.0.0">
 <meta name="theme-color" content="#861f41">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -203,13 +381,13 @@ svg.chart{width:100%;height:280px;min-width:720px}
 <div class="shell">
   <aside class="sidebar">
     <div class="logo-wrap">
-      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=10.3.0" alt="Logotipo Coco Pops">
+      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=11.0.0" alt="Logotipo Coco Pops">
       <div>
         <div class="brand-title">CICE</div>
         <div class="brand-sub">Solo consulta · Powered by Odoo</div>
       </div>
     </div>
-    <div class="nav-label">Centro de mando</div>
+    <div class="nav-label">Centro ejecutivo</div>
     <button class="nav-btn active" data-module="home">Resumen Ejecutivo</button>
     <button class="nav-btn" data-module="inventory">Inventarios</button>
     <button class="nav-btn" data-module="production">Producción</button>
@@ -224,70 +402,95 @@ svg.chart{width:100%;height:280px;min-width:720px}
 
   <main class="main">
     <div class="top">
-      <div><h1 id="pageTitle">Centro de Inteligencia Empresarial</h1><div class="muted">Información operativa y estratégica para Dirección General</div></div>
-      <div class="stamp">
-  <div class="sync-panel">
-    <div>
-      <div id="syncStatus" class="sync-status">
-        <span id="syncDot" class="sync-dot"></span>
-        <span id="syncText">Datos sincronizados</span>
+      <div class="top-title-wrap">
+        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">☰</button>
+        <div><h1 id="pageTitle">CICE</h1><div class="muted">• Inteligencia para decisiones que hacen crecer a Coco Pops</div></div>
       </div>
-      <div id="syncMeta" class="sync-meta">Esperando actualización...</div>
-    </div>
-    <button id="refreshNow" class="refresh-btn" type="button">Actualizar ahora</button>
-  </div>
-</div>
+      <div class="stamp">
+        <div class="sync-panel">
+          <div>
+            <div id="syncStatus" class="sync-status">
+              <span id="syncDot" class="sync-dot"></span>
+              <span id="syncText">Datos sincronizados</span>
+            </div>
+            <div id="syncMeta" class="sync-meta">Esperando actualización...</div>
+          </div>
+          <button id="refreshNow" class="refresh-btn" type="button">↻ Actualizar ahora</button>
+        </div>
+      </div>
     </div>
 
     <div id="status" class="hidden"></div>
 
     <div id="dashboard" hidden>
       <section id="homeView">
-        <div class="command-grid">
-          <button class="command" data-open="inventory"><div class="icon">📦</div><div class="title">Inventarios</div><div class="desc">Existencias, mínimos y riesgos</div></button>
-          <button class="command" data-open="production"><div class="icon">🏭</div><div class="title">Producción</div><div class="desc">Órdenes y avance del día</div></button>
-          <button class="command" data-open="sales"><div class="icon">💰</div><div class="title">Ventas</div><div class="desc">Pedidos y facturación</div></button>
-          <button class="command" data-open="inventory"><div class="icon">🛒</div><div class="title">Compras</div><div class="desc">Próxima fase</div></button>
-          <button class="command" data-open="inventory"><div class="icon">🚚</div><div class="title">Logística</div><div class="desc">Próxima fase</div></button>
-          <button class="command" data-open="alerts"><div class="icon">🚨</div><div class="title">Alertas</div><div class="desc">Prioridades del día</div></button>
+        <div class="premium-hero">
+          <div class="hero-copy">
+            <h2 class="hero-quote">
+              Antes de existir el camino,
+              <span class="script">alguien tuvo que imaginarlo</span>
+            </h2>
+            <img class="hero-brand-mark" src="/static/cocopops-logo.png?v=11.0.0" alt="Coco Pops">
+          </div>
+
+          <div>
+            <div class="hero-values">
+              <div class="hero-value"><span class="hero-value-icon">◇</span><div><b>Calidad</b><small>que se siente</small></div></div>
+              <div class="hero-value"><span class="hero-value-icon">♡</span><div><b>Experiencias</b><small>que conectan</small></div></div>
+              <div class="hero-value"><span class="hero-value-icon">◉</span><div><b>Innovación</b><small>que inspira</small></div></div>
+              <div class="hero-value"><span class="hero-value-icon">☆</span><div><b>Excelencia</b><small>que nos distingue</small></div></div>
+            </div>
+
+            <div class="hero-kpis">
+              <article class="hero-kpi">
+                <div class="kpi-title"><span class="kpi-icon">▣</span> Inventario disponible</div>
+                <div class="kpi-value" id="homeCoverage">—</div>
+                <div class="kpi-note">Cobertura contra stock mínimo</div>
+              </article>
+              <article class="hero-kpi">
+                <div class="kpi-title"><span class="kpi-icon">▥</span> Ventas hoy</div>
+                <div class="kpi-value" id="homeSales">$0</div>
+                <div class="kpi-note">Pedidos confirmados</div>
+              </article>
+              <article class="hero-kpi">
+                <div class="kpi-title"><span class="kpi-icon">△</span> Productos críticos</div>
+                <div class="kpi-value" id="homeCritical">0</div>
+                <div class="kpi-note">Requieren atención</div>
+              </article>
+              <article class="hero-kpi">
+                <div class="kpi-title"><span class="kpi-icon">⌁</span> Producción</div>
+                <div class="kpi-value" id="homeProduction">0%</div>
+                <div class="kpi-note">Avance del día</div>
+              </article>
+              <article class="hero-kpi priority">
+                <div class="kpi-title"><span class="kpi-icon">◎</span> Prioridad principal</div>
+                <div class="kpi-value" id="homePriority">Sin prioridad crítica</div>
+                <div class="kpi-note" id="homePriorityNote">Operación estable</div>
+              </article>
+            </div>
+            <div id="heroUpdated" class="hero-update">↻ Información actualizada desde Odoo</div>
+          </div>
+
+          <div id="companyBanner" class="status-banner">
+            <div><b id="companyHeadline"></b><div id="companyDetail"></div></div>
+            <span id="companyPill" class="pill"></span>
+          </div>
         </div>
 
-        <div id="companyBanner" class="status-banner">
-          <div><b id="companyHeadline"></b><div id="companyDetail"></div></div>
-          <span id="companyPill" class="pill"></span>
+        <div class="home-details">
+          <section class="section">
+            <article class="card">
+              <div class="eyebrow">Lo que debes saber</div>
+              <h2>Recomendaciones automáticas</h2>
+              <div id="recommendations" class="recommendations"></div>
+            </article>
+            <article class="card">
+              <div class="eyebrow">Resumen ejecutivo</div>
+              <h2>Situación del día</h2>
+              <div id="executiveSummary" style="line-height:1.7"></div>
+            </article>
+          </section>
         </div>
-
-        <section class="grid">
-          <article class="card">
-            <div class="eyebrow">Inventario</div><div class="big" id="homeCoverage">—</div>
-            <div class="muted">Cobertura global</div>
-          </article>
-          <article class="card">
-            <div class="eyebrow">Productos críticos</div><div class="big" id="homeCritical">0</div>
-            <div class="muted">Requieren atención</div>
-          </article>
-          <article class="card">
-            <div class="eyebrow">Producción</div><div class="big" id="homeProduction">0%</div>
-            <div class="muted">Avance del día</div>
-          </article>
-          <article class="card">
-            <div class="eyebrow">Ventas</div><div class="big" id="homeSales">$0</div>
-            <div class="muted">Confirmadas hoy</div>
-          </article>
-        </section>
-
-        <section class="section">
-          <article class="card">
-            <div class="eyebrow">Lo que debes saber</div>
-            <h2>Recomendaciones automáticas</h2>
-            <div id="recommendations" class="recommendations"></div>
-          </article>
-          <article class="card">
-            <div class="eyebrow">Resumen ejecutivo</div>
-            <h2>Situación del día</h2>
-            <div id="executiveSummary" style="line-height:1.7"></div>
-          </article>
-        </section>
       </section>
 
       <section id="inventoryView" class="hidden">
@@ -642,6 +845,10 @@ function renderHome(){
   const g=DATA.inventory.global,e=DATA.executive_summary;
   homeCoverage.textContent=g.coverage_pct===null?'—':num(g.coverage_pct)+'%';
   homeCritical.textContent=g.critical;homeProduction.textContent=num(DATA.production.progress)+'%';homeSales.textContent=money(DATA.sales.total);
+  const priority=(DATA.ceo_priorities?.top_actions||[])[0];
+  homePriority.textContent=priority?priority.title:'Sin prioridad crítica';
+  homePriorityNote.textContent=priority?`${priority.type||'ACCIÓN'} · ${priority.priority||''}`:'Operación estable';
+  heroUpdated.textContent=`↻ Última actualización: ${new Date(DATA.generated_at).toLocaleString('es-MX')}`;
   companyHeadline.textContent=e.headline;companyDetail.textContent=e.inventory_message;
   companyPill.textContent=e.company_status==='CRITICO'?'Crítico':e.company_status==='ATENCION'?'Atención':'Estable';
   companyPill.className='pill '+(e.company_status==='CRITICO'?'bad':e.company_status==='ATENCION'?'warn':'ok');
@@ -856,6 +1063,10 @@ async function loadData(){
     status.className='hidden';dashboard.hidden=false;
   }catch(error){status.className='card error';status.innerHTML='<b>No se pudo actualizar la información.</b><br><br>'+error.message;dashboard.hidden=true;}
 }
+
+menuToggle.onclick=()=>document.querySelector('.sidebar').classList.toggle('open');
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>document.querySelector('.sidebar').classList.remove('open')));
+
 document.querySelectorAll('[data-module]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
 document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.open));
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
@@ -864,7 +1075,7 @@ tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');t
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('/static/service-worker.js?v=10.3.0');
+      const registration = await navigator.serviceWorker.register('/static/service-worker.js?v=11.0.0');
       registration.update();
     } catch (_) {}
   });

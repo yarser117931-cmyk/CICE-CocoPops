@@ -1,0 +1,40 @@
+CICE 11.0 — DISEÑO PREMIUM EJECUTIVO
+======================================
+
+CAMBIOS
+-------
+- Nueva pantalla principal inspirada en Coco Pops Fashion Mall Chihuahua.
+- Logotipo real de Coco Pops visible en PC y móvil.
+- Frase:
+  “Antes de existir el camino, alguien tuvo que imaginarlo”.
+- Paleta premium en vino, crema, blanco y dorado.
+- Indicadores reales de Odoo integrados en la portada.
+- Prioridad principal calculada automáticamente.
+- Valores de marca: Calidad, Experiencias, Innovación y Excelencia.
+- Menú móvil deslizable.
+- Botón de actualización en PC y móvil.
+- Las demás pantallas de Inventarios, Producción, Ventas, Histórico,
+  Prioridades y Copiloto conservan su funcionalidad.
+
+PUBLICAR
+--------
+1. Descomprime este ZIP.
+2. Copia todo su contenido dentro de:
+   Documentos/GitHub/CICE-CocoPops
+3. Reemplaza los archivos.
+4. Abre GitHub Desktop.
+5. Summary:
+   Nuevo diseño premium CICE 11.0
+6. Commit to main.
+7. Push origin.
+8. Espera que Render termine el despliegue.
+
+DESPUÉS DEL DESPLIEGUE
+----------------------
+PC:
+- Presiona Ctrl + F5 una sola vez.
+
+Móvil:
+- Cierra completamente CICE y vuelve a abrir.
+- Si estaba instalada como app y sigue mostrando la versión anterior,
+  elimina el icono y vuelve a agregar CICE a la pantalla de inicio.

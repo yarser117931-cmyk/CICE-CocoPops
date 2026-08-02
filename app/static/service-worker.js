@@ -1,11 +1,12 @@
 
-const CACHE_NAME = "cice-v10-3-0";
+const CACHE_NAME = "cice-v11-0-0";
 const STATIC_ASSETS = [
-  "/static/manifest.webmanifest?v=10.3.0",
-  "/static/icon-192.png?v=10.3.0",
-  "/static/icon-512.png?v=10.3.0",
-  "/static/apple-touch-icon.png?v=10.3.0",
-  "/static/cocopops-logo.png?v=10.3.0"
+  "/static/manifest.webmanifest?v=11.0.0",
+  "/static/icon-192.png?v=11.0.0",
+  "/static/icon-512.png?v=11.0.0",
+  "/static/apple-touch-icon.png?v=11.0.0",
+  "/static/cocopops-logo.png?v=11.0.0",
+  "/static/cocopops-fashion-mall-hero.jpg?v=11.0.0"
 ];
 
 self.addEventListener("install", event => {
