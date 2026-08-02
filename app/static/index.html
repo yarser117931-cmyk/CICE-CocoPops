@@ -95,11 +95,11 @@ td.num,th.num{text-align:right}
 
   <main class="main">
     <div class="top">
-      <div><h1 id="pageTitle">Centro de Mando</h1><div class="muted">CICE — Centro de Inteligencia y Control Ejecutivo</div></div>
-      <div class="stamp"><b>Última actualización</b><br><span id="updated">Cargando…</span></div>
+      <div><h1 id="pageTitle">Centro de Inteligencia Ejecutiva</h1><div class="muted">Información estratégica para la toma de decisiones</div></div>
+      <div class="stamp"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:#22c55e;display:inline-block"></span><b>Odoo sincronizado</b></div><span id="updated">Actualizando…</span></div>
     </div>
 
-    <div id="status" class="card loading">Conectando con Odoo…</div>
+    <div id="status" class="hidden"></div>
 
     <div id="dashboard" hidden>
       <section id="homeView">
@@ -255,7 +255,7 @@ function openModule(module){
   ['home','inventory','production','sales','alerts'].forEach(name=>{
     document.getElementById(name+'View').classList.toggle('hidden',name!==module);
   });
-  const titles={home:'Centro de Mando',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
+  const titles={home:'Centro de Inteligencia Ejecutiva',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
   pageTitle.textContent=titles[module];
   document.querySelectorAll('.nav-btn[data-module]').forEach(b=>b.classList.toggle('active',b.dataset.module===module));
 }
@@ -336,7 +336,7 @@ function renderHome(){
     <div class="rec-title">${r.action}: ${r.product}</div><div>${r.message}</div><div class="rec-meta">${r.category} · Prioridad ${r.priority}</div></div>`).join('')||'<div class="muted">Sin recomendaciones urgentes.</div>';
 }
 async function loadData(){
-  status.hidden=false;dashboard.hidden=true;
+  status.className='hidden';dashboard.hidden=true;
   try{
     const response=await fetch('/api/dashboard',{cache:'no-store'});
     DATA=await response.json();if(!response.ok)throw new Error(DATA.detail||'No fue posible consultar Odoo.');
@@ -344,8 +344,8 @@ async function loadData(){
     productionProgress.textContent=num(DATA.production.progress)+'%';productionOrders.textContent=DATA.production.orders;productionPlanned.textContent=num(DATA.production.planned);productionDone.textContent=num(DATA.production.done);
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
     renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();
-    status.hidden=true;dashboard.hidden=false;
-  }catch(error){status.className='card error';status.innerHTML='<b>No se pudo conectar.</b><br><br>'+error.message;}
+    status.className='hidden';dashboard.hidden=false;
+  }catch(error){status.className='card error';status.innerHTML='<b>No se pudo actualizar la información.</b><br><br>'+error.message;dashboard.hidden=true;}
 }
 document.querySelectorAll('[data-module]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
 document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.open));
