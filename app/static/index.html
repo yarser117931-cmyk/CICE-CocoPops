@@ -94,6 +94,25 @@ svg.chart{width:100%;height:280px;min-width:720px}
 @media(max-width:1200px){.history-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:780px){.history-grid{grid-template-columns:1fr}}
 
+
+.priority-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.priority-metric{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+.priority-number{font-size:36px;font-weight:900;margin-top:6px}
+.priority-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.priority-column{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}
+.priority-column h3{margin:6px 0 14px}
+.priority-item{border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer}
+.priority-item:hover{box-shadow:0 8px 20px rgba(31,41,55,.07)}
+.priority-item.high{border-left:6px solid var(--red)}
+.priority-item.medium{border-left:6px solid var(--orange)}
+.priority-item.preventive{border-left:6px solid var(--amber)}
+.priority-item.operational{border-left:6px solid var(--blue)}
+.priority-type{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+.priority-title{font-weight:900;margin-top:4px}
+.priority-reason{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.45}
+@media(max-width:1100px){.priority-summary{grid-template-columns:repeat(2,1fr)}.priority-columns{grid-template-columns:1fr}}
+@media(max-width:700px){.priority-summary{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -110,6 +129,7 @@ svg.chart{width:100%;height:280px;min-width:720px}
     <button class="nav-btn" data-module="sales">Ventas</button>
     <button class="nav-btn" data-module="alerts">Alertas</button>
 <button class="nav-btn" data-module="history">Histórico</button>
+<button class="nav-btn" data-module="priorities">Prioridades CEO</button>
     <div class="nav-label">Categorías de inventario</div>
     <div id="categoryNav"></div>
   </aside>
@@ -246,6 +266,61 @@ svg.chart{width:100%;height:280px;min-width:720px}
       </section>
 
 
+
+      <section id="prioritiesView" class="hidden">
+        <article class="card">
+          <div class="eyebrow">Prioridades del CEO</div>
+          <h2>Acciones recomendadas para hoy</h2>
+          <p class="muted">
+            Las prioridades se calculan con información real de Odoo:
+            existencia disponible, stock mínimo, producción y ventas.
+          </p>
+        </article>
+
+        <div class="priority-summary" style="margin-top:16px">
+          <div class="priority-metric">
+            <div class="eyebrow">Acciones totales</div>
+            <div id="priorityTotal" class="priority-number">0</div>
+            <div class="muted">Recomendaciones detectadas</div>
+          </div>
+          <div class="priority-metric">
+            <div class="eyebrow">Urgentes</div>
+            <div id="priorityUrgent" class="priority-number">0</div>
+            <div class="muted">Requieren atención inmediata</div>
+          </div>
+          <div class="priority-metric">
+            <div class="eyebrow">Importantes</div>
+            <div id="priorityImportant" class="priority-number">0</div>
+            <div class="muted">Deben programarse</div>
+          </div>
+          <div class="priority-metric">
+            <div class="eyebrow">Preventivas</div>
+            <div id="priorityPreventive" class="priority-number">0</div>
+            <div class="muted">Evitan futuros problemas</div>
+          </div>
+        </div>
+
+        <div class="priority-columns">
+          <article class="priority-column">
+            <div class="eyebrow">Alta prioridad</div>
+            <h3>Atender hoy</h3>
+            <div id="priorityUrgentList"></div>
+          </article>
+
+          <article class="priority-column">
+            <div class="eyebrow">Prioridad media</div>
+            <h3>Programar</h3>
+            <div id="priorityImportantList"></div>
+          </article>
+
+          <article class="priority-column">
+            <div class="eyebrow">Prevención y operación</div>
+            <h3>Vigilar</h3>
+            <div id="priorityPreventiveList"></div>
+          </article>
+        </div>
+      </section>
+
       <section id="historyView" class="hidden">
         <article class="card">
           <div class="row">
@@ -353,7 +428,7 @@ function statusLabel(status){
   return `<span class="status-dot ${item[1]}"></span>${item[0]}`;
 }
 function openModule(module){
-  ['home','inventory','production','sales','alerts','history'].forEach(name=>{
+  ['home','inventory','production','sales','alerts','history','priorities'].forEach(name=>{
     document.getElementById(name+'View').classList.toggle('hidden',name!==module);
   });
   const titles={home:'Centro de Inteligencia Empresarial',inventory:'Inventarios',production:'Producción',sales:'Ventas',alerts:'Centro de Alertas'};
@@ -527,6 +602,56 @@ async function loadHistory(){
   }
 }
 
+
+function priorityItemHtml(item, cssClass){
+  const productData=item.product_id!==undefined&&item.product_id!==null
+    ?`data-product-id="${item.product_id}"`
+    :'';
+  return `<div class="priority-item ${cssClass}" ${productData}>
+    <div class="priority-type">${item.type||'ACCIÓN'} · ${item.category||'Operación'}</div>
+    <div class="priority-title">${item.title}</div>
+    <div class="priority-reason">${item.reason}</div>
+  </div>`;
+}
+function renderPriorities(){
+  const p=DATA.ceo_priorities||{
+    total_actions:0,urgent_count:0,important_count:0,preventive_count:0,
+    buckets:{urgent:[],important:[],preventive:[],operational:[]}
+  };
+  priorityTotal.textContent=p.total_actions||0;
+  priorityUrgent.textContent=p.urgent_count||0;
+  priorityImportant.textContent=p.important_count||0;
+  priorityPreventive.textContent=p.preventive_count||0;
+
+  priorityUrgentList.innerHTML=(p.buckets.urgent||[])
+    .map(item=>priorityItemHtml(item,'high')).join('')
+    ||'<div class="muted">No hay acciones urgentes.</div>';
+
+  priorityImportantList.innerHTML=(p.buckets.important||[])
+    .map(item=>priorityItemHtml(item,'medium')).join('')
+    ||'<div class="muted">No hay acciones importantes.</div>';
+
+  const preventive=[
+    ...(p.buckets.preventive||[]),
+    ...(p.buckets.operational||[])
+  ];
+  priorityPreventiveList.innerHTML=preventive
+    .map(item=>priorityItemHtml(
+      item,
+      item.type==='PRODUCCION'||item.type==='VENTAS'||item.type==='CONFIGURACION'
+        ?'operational':'preventive'
+    )).join('')
+    ||'<div class="muted">No hay acciones preventivas.</div>';
+
+  document.querySelectorAll('.priority-item[data-product-id]').forEach(card=>{
+    card.onclick=()=>{
+      const id=Number(card.dataset.productId);
+      const product=DATA.inventory.products.find(p=>Number(p.id)===id);
+      if(product)openProduct(product);
+    };
+  });
+}
+
 async function loadData(){
   status.className='hidden';dashboard.hidden=true;
   try{
@@ -535,7 +660,7 @@ async function loadData(){
     updated.textContent=new Date(DATA.generated_at).toLocaleString('es-MX');
     productionProgress.textContent=num(DATA.production.progress)+'%';productionOrders.textContent=DATA.production.orders;productionPlanned.textContent=num(DATA.production.planned);productionDone.textContent=num(DATA.production.done);
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
-    renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();
+    renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();renderPriorities();
     historyCategory.innerHTML='<option value="TODOS">Todas las categorías</option>'+DATA.inventory.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
     status.className='hidden';dashboard.hidden=false;
   }catch(error){status.className='card error';status.innerHTML='<b>No se pudo actualizar la información.</b><br><br>'+error.message;dashboard.hidden=true;}

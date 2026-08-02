@@ -1,0 +1,55 @@
+CICE 9.0 — PRIORIDADES DEL CEO
+================================
+
+NUEVO MÓDULO
+------------
+En el menú aparecerá:
+
+PRIORIDADES CEO
+
+El módulo clasifica las acciones en:
+
+1. ATENDER HOY
+   Productos críticos que deben fabricarse o reabastecerse.
+
+2. PROGRAMAR
+   Productos debajo del mínimo que deben incluirse en el plan.
+
+3. VIGILAR
+   Productos en riesgo, avance de producción, ventas sin pedidos y
+   productos sin política de stock mínimo.
+
+REGLAS
+------
+- Producto terminado crítico:
+  FABRICAR
+
+- Ingrediente, empaque o material crítico:
+  REABASTECER
+
+- Producto bajo mínimo:
+  PROGRAMAR
+
+- Producto entre 100% y 120%:
+  VIGILAR
+
+- Producción con bajo avance:
+  REVISAR PRODUCCIÓN
+
+- Productos sin mínimo:
+  CONFIGURAR POLÍTICA
+
+IMPORTANTE
+----------
+Estas son recomendaciones automáticas basadas en reglas y datos reales
+de Odoo. No sustituyen la autorización humana ni crean órdenes en Odoo.
+
+PUBLICAR
+--------
+1. Copia todo el contenido del paquete al repositorio.
+2. Abre GitHub Desktop.
+3. En Summary escribe:
+   Agregar Prioridades del CEO CICE 9.0
+4. Commit to main.
+5. Push origin.
+6. Espera el despliegue automático de Render.

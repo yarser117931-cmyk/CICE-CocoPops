@@ -1,5 +1,13 @@
 # Historial de versiones de CICE
 
+## 9.0.0 — Prioridades del CEO
+- Nuevo módulo Prioridades CEO.
+- Acciones clasificadas en urgentes, importantes y preventivas.
+- Recomendaciones de fabricar o reabastecer.
+- Alertas de producción, ventas y productos sin mínimo.
+- Acceso a la ficha del producto desde cada recomendación.
+
+
 ## 8.0.0 — Histórico Ejecutivo
 - Nuevo módulo Histórico en el menú lateral.
 - Comparativos de 7, 30, 90 y 365 días.

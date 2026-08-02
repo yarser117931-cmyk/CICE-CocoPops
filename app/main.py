@@ -17,6 +17,7 @@ from app.services.history import capture_snapshot, trends
 from app.services.intelligence import build_intelligence
 from app.services.inventory import build_inventory
 from app.services.production import build_production
+from app.services.priorities import build_ceo_priorities
 from app.services.sales import build_sales
 from app.services.warehouse import (
     executive_history,
@@ -37,7 +38,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="8.0.0",
+    version="9.0.0",
 )
 
 app.mount(
@@ -62,7 +63,7 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "8.0.0",
+        "version": "9.0.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
@@ -226,6 +227,12 @@ async def dashboard() -> dict[str, object]:
         sales,
     )
 
+    ceo_priorities = build_ceo_priorities(
+        inventory,
+        production,
+        sales,
+    )
+
     history = capture_snapshot(
         today=start.date(),
         inventory=inventory,
@@ -251,5 +258,6 @@ async def dashboard() -> dict[str, object]:
         "sales": sales,
         "history": history,
         "warehouse": warehouse,
+        "ceo_priorities": ceo_priorities,
         **intelligence,
     }
