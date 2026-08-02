@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import Settings
@@ -18,6 +18,14 @@ from app.services.intelligence import build_intelligence
 from app.services.inventory import build_inventory
 from app.services.production import build_production
 from app.services.sales import build_sales
+from app.services.warehouse import (
+    executive_history,
+    export_executive_csv,
+    initialize_warehouse,
+    inventory_history,
+    save_warehouse_snapshot,
+    warehouse_enabled,
+)
 
 load_dotenv()
 
@@ -29,7 +37,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="6.0.0",
+    version="7.0.0",
 )
 
 app.mount(
@@ -42,6 +50,7 @@ app.mount(
 @app.on_event("startup")
 async def startup() -> None:
     initialize_database()
+    initialize_warehouse()
 
 
 @app.get("/")
@@ -53,9 +62,10 @@ async def home() -> FileResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "6.0.0",
-        "architecture": "modular-with-history",
+        "version": "7.0.0",
+        "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
+        "warehouse_enabled": warehouse_enabled(),
         "odoo_url": settings.odoo_url,
         "database": settings.odoo_database,
     }
@@ -64,6 +74,50 @@ async def health() -> dict[str, object]:
 @app.get("/api/trends")
 async def get_trends(days: int = 30) -> dict[str, object]:
     return trends(days)
+
+
+@app.get("/api/warehouse/executive")
+async def warehouse_executive(
+    category: str = "TODOS",
+    days: int = 90,
+) -> dict[str, object]:
+    return {
+        "enabled": warehouse_enabled(),
+        "category": category,
+        "points": executive_history(category=category, days=days),
+    }
+
+
+@app.get("/api/warehouse/inventory")
+async def warehouse_inventory(
+    product_id: int | None = None,
+    days: int = 90,
+) -> dict[str, object]:
+    return {
+        "enabled": warehouse_enabled(),
+        "product_id": product_id,
+        "points": inventory_history(product_id=product_id, days=days),
+    }
+
+
+@app.get(
+    "/api/warehouse/export.csv",
+    response_class=PlainTextResponse,
+)
+async def warehouse_export(
+    category: str = "TODOS",
+    days: int = 365,
+) -> PlainTextResponse:
+    content = export_executive_csv(category=category, days=days)
+    return PlainTextResponse(
+        content,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="cice-{category.lower()}-historico.csv"'
+            )
+        },
+    )
 
 
 @app.get("/api/dashboard")
@@ -94,6 +148,13 @@ async def dashboard() -> dict[str, object]:
         sales=sales,
     )
 
+    warehouse = save_warehouse_snapshot(
+        snapshot_date=start.date(),
+        inventory=inventory,
+        production=production,
+        sales=sales,
+    )
+
     return {
         "generated_at": now.isoformat(),
         "source": {
@@ -104,5 +165,6 @@ async def dashboard() -> dict[str, object]:
         "production": production,
         "sales": sales,
         "history": history,
+        "warehouse": warehouse,
         **intelligence,
     }
