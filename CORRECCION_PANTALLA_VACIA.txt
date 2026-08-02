@@ -1,0 +1,36 @@
+CICE 12.0.1 — CORRECCIÓN DE PANTALLA VACÍA
+============================================
+
+CAUSA
+-----
+El botón flotante de actualización móvil aparecía después del código
+JavaScript. El navegador intentaba usarlo antes de que existiera y detenía
+la ejecución. Por eso CICE mostraba el diseño, pero nunca consultaba Odoo.
+
+CORRECCIÓN
+----------
+- El botón ahora se crea antes de ejecutar JavaScript.
+- Los controles se localizan explícitamente por su ID.
+- loadData() vuelve a ejecutarse correctamente.
+- Se agregó estado visual mientras se actualizan los datos.
+- La versión visible cambia a CICE 12.0.1.
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio.
+2. GitHub Desktop:
+   Summary: Corregir pantalla vacía CICE 12.0.1
+3. Commit to main.
+4. Push origin.
+5. Espera Deploy live en Render.
+
+DESPUÉS
+-------
+Abre una sola vez:
+https://cice-cocopops.onrender.com/actualizar-cice
+
+Luego verifica:
+https://cice-cocopops.onrender.com/api/health
+
+Debe mostrar:
+"version": "12.0.1"
