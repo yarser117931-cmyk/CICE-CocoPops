@@ -1,0 +1,26 @@
+CICE 12.2 — PRODUCCIÓN EJECUTIVA DETALLADA
+===========================================
+
+CAMBIOS
+-------
+- Muestra cada orden de fabricación.
+- Muestra el producto y la cantidad programada.
+- Distingue órdenes ABIERTAS y CERRADAS.
+- Presenta el estado operativo: borrador, confirmada, en producción,
+  por cerrar o terminada.
+- Incluye todas las órdenes abiertas, aunque sean de días anteriores.
+- Incluye las órdenes terminadas hoy.
+- Agrega filtros: Todas, Abiertas y Terminadas.
+- Agrega búsqueda por producto u orden.
+- Diseño adaptado para PC y móvil.
+
+PUBLICAR
+--------
+1. Copia todo el contenido al repositorio CICE-CocoPops.
+2. Abre GitHub Desktop.
+3. Summary: Agregar detalle de producción para CEO CICE 12.2
+4. Commit to main.
+5. Push origin.
+6. Espera Deploy live en Render.
+7. Abre una vez: https://cice-cocopops.onrender.com/actualizar-cice
+8. Verifica /api/health: debe mostrar version 12.2.0.

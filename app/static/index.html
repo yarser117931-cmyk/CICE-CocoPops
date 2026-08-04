@@ -261,7 +261,7 @@ body{
   position:relative;min-height:calc(100vh - 82px);
   background:
     linear-gradient(90deg,#fffdfb 0%,#fffdfb 24%,rgba(255,253,251,.96) 34%,rgba(255,253,251,.25) 61%,rgba(255,253,251,0) 76%),
-    url('/static/cocopops-fashion-mall-hero.jpg?v=12.1.0') center right/cover no-repeat;
+    url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.0') center right/cover no-repeat;
   overflow:hidden;padding:56px 34px 34px;
   display:flex;flex-direction:column;justify-content:space-between
 }
@@ -346,7 +346,7 @@ body{
     min-height:calc(100vh - 68px);padding:30px 16px 20px;
     background:
       linear-gradient(180deg,rgba(255,253,251,.98) 0%,rgba(255,253,251,.88) 34%,rgba(255,253,251,.08) 59%,rgba(72,17,35,.24) 100%),
-      url('/static/cocopops-fashion-mall-hero.jpg?v=12.1.0') 67% center/cover no-repeat
+      url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.0') 67% center/cover no-repeat
   }
   .hero-copy{max-width:100%}
   .hero-quote{font-size:42px;max-width:310px}
@@ -378,7 +378,7 @@ body{
   justify-content:flex-start;
   background:
     linear-gradient(90deg,#fffdfb 0%,#fffdfb 22%,rgba(255,253,251,.92) 34%,rgba(255,253,251,.18) 60%,rgba(255,253,251,0) 77%),
-    url('/static/cocopops-fashion-mall-hero.jpg?v=12.1.0') center right/cover no-repeat;
+    url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.0') center right/cover no-repeat;
 }
 .hero-copy{max-width:520px}
 .hero-quote{font-size:clamp(38px,4.1vw,62px);line-height:.98}
@@ -406,7 +406,7 @@ body{
     padding:22px 14px 18px;
     background:
       linear-gradient(180deg,rgba(255,253,251,.98) 0%,rgba(255,253,251,.9) 34%,rgba(255,253,251,.2) 58%,rgba(72,17,35,.3) 100%),
-      url('/static/cocopops-fashion-mall-hero.jpg?v=12.1.0') 72% center/cover no-repeat;
+      url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.0') 72% center/cover no-repeat;
   }
   .hero-quote{font-size:36px;max-width:290px}
   .hero-subtitle{font-size:14px;max-width:280px}
@@ -416,10 +416,37 @@ body{
   .hero-kpi:last-child{grid-column:1/-1}
 }
 
+
+/* ===== PRODUCCIÓN EJECUTIVA DETALLADA 12.2 ===== */
+.production-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:18px 0 14px}
+.production-filters{display:flex;gap:8px;flex-wrap:wrap}
+.production-filter{border:1px solid var(--line);background:#fff;color:var(--text);padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}
+.production-filter.active{background:var(--burgundy);border-color:var(--burgundy);color:#fff}
+.production-search{min-width:260px;max-width:420px;flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 13px;font:inherit;background:#fff}
+.production-table td{vertical-align:middle}
+.production-product{font-weight:900;color:var(--text)}
+.production-order{font-weight:800;color:var(--burgundy)}
+.production-state{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;white-space:nowrap}
+.production-state.open{background:#fff1d6;color:#9a5b00}
+.production-state.progress{background:#e8f1ff;color:#1d4ed8}
+.production-state.close{background:#dcfce7;color:#166534}
+.production-state.draft{background:#f1f5f9;color:#475569}
+.production-empty{text-align:center;padding:35px;color:var(--muted)}
+.production-mobile-list{display:none;gap:10px}
+.production-mobile-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 10px 24px rgba(77,40,51,.06)}
+.production-mobile-card .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}
+@media(max-width:780px){
+  .production-search{min-width:100%;max-width:none}
+  .production-desktop-table{display:none}
+  .production-mobile-list{display:grid}
+  #productionView .grid{grid-template-columns:1fr 1fr}
+  #productionView .grid .card:last-child{grid-column:1/-1}
+}
+
 </style>
 
-<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=12.1.0">
-<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=12.1.0">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=12.2.0">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=12.2.0">
 <meta name="theme-color" content="#861f41">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -430,10 +457,10 @@ body{
 <div class="shell">
   <aside class="sidebar">
     <div class="logo-wrap">
-      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=12.1.0" alt="Logotipo Coco Pops">
+      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=12.2.0" alt="Logotipo Coco Pops">
       <div>
         <div class="brand-title">CICE</div>
-        <div class="brand-sub">Solo consulta · Powered by Odoo · CICE 12.1</div>
+        <div class="brand-sub">Solo consulta · Powered by Odoo · CICE 12.2</div>
       </div>
     </div>
     <div class="nav-label">Centro ejecutivo</div>
@@ -602,11 +629,38 @@ body{
 
       <section id="productionView" class="hidden">
         <section class="grid">
+          <article class="card"><div class="eyebrow">Órdenes abiertas</div><div class="big" id="productionOpen">0</div><div class="muted">Pendientes o en proceso</div></article>
+          <article class="card"><div class="eyebrow">Terminadas hoy</div><div class="big" id="productionFinishedToday">0</div><div class="muted">Órdenes cerradas</div></article>
+          <article class="card"><div class="eyebrow">Planeado hoy</div><div class="big" id="productionPlanned">0</div><div class="muted">Unidades programadas</div></article>
+          <article class="card"><div class="eyebrow">Terminado hoy</div><div class="big" id="productionDone">0</div><div class="muted">Unidades completadas</div></article>
           <article class="card"><div class="eyebrow">Avance del día</div><div class="big" id="productionProgress">0%</div><div class="muted">Producción terminada</div></article>
-          <article class="card"><div class="eyebrow">Órdenes</div><div class="big" id="productionOrders">0</div><div class="muted">Órdenes activas hoy</div></article>
-          <article class="card"><div class="eyebrow">Planeado</div><div class="big" id="productionPlanned">0</div><div class="muted">Cantidad programada</div></article>
-          <article class="card"><div class="eyebrow">Terminado</div><div class="big" id="productionDone">0</div><div class="muted">Cantidad completada</div></article>
         </section>
+
+        <article class="card" style="margin-top:18px">
+          <div class="eyebrow">Detalle de fabricación</div>
+          <h2>Productos y cantidades por orden</h2>
+          <p class="muted">Incluye todas las órdenes abiertas y las terminadas durante el día.</p>
+
+          <div class="production-toolbar">
+            <div class="production-filters">
+              <button class="production-filter active" data-production-filter="ALL">Todas</button>
+              <button class="production-filter" data-production-filter="OPEN">Abiertas</button>
+              <button class="production-filter" data-production-filter="CLOSED">Terminadas</button>
+            </div>
+            <input id="productionSearch" class="production-search" type="search" placeholder="Buscar producto u orden...">
+          </div>
+
+          <div class="table-wrap production-desktop-table">
+            <table class="production-table">
+              <thead>
+                <tr><th>Orden</th><th>Producto</th><th class="num">Cantidad</th><th class="num">Producido</th><th>Estado</th><th>Inicio</th><th>Terminación</th></tr>
+              </thead>
+              <tbody id="productionTable"></tbody>
+            </table>
+          </div>
+          <div id="productionMobileList" class="production-mobile-list"></div>
+          <div id="productionEmpty" class="production-empty hidden">No hay órdenes con este filtro.</div>
+        </article>
       </section>
 
       <section id="salesView" class="hidden">
@@ -810,7 +864,7 @@ body{
 <script>
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n||0));
 const num=n=>new Intl.NumberFormat('es-MX',{maximumFractionDigits:2}).format(Number(n||0));
-let DATA=null,selectedCategory='TODOS',productView='cards';
+let DATA=null,selectedCategory='TODOS',productView='cards',productionFilter='ALL';
 
 function coverageStyle(value){
   if(value===null||value===undefined)return{text:'Sin datos',cls:'neutral',color:'#7c3aed'};
@@ -1093,6 +1147,59 @@ function renderPriorities(){
 }
 
 
+
+function productionStateClass(row){
+  if(row.state==='done')return 'close';
+  if(row.state==='progress'||row.state==='to_close')return 'progress';
+  if(row.state==='draft')return 'draft';
+  return 'open';
+}
+function productionDate(value){
+  if(!value)return '—';
+  const parsed=new Date(String(value).replace(' ','T')+'Z');
+  if(Number.isNaN(parsed.getTime()))return String(value);
+  return parsed.toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function filteredProductionOrders(){
+  const query=(productionSearch.value||'').trim().toLowerCase();
+  return (DATA?.production?.details||[]).filter(row=>{
+    const statusOk=productionFilter==='ALL'||(productionFilter==='OPEN'&&!row.is_closed)||(productionFilter==='CLOSED'&&row.is_closed);
+    const queryOk=!query||`${row.order} ${row.product} ${row.origin||''}`.toLowerCase().includes(query);
+    return statusOk&&queryOk;
+  });
+}
+function renderProduction(){
+  if(!DATA)return;
+  const p=DATA.production||{};
+  productionOpen.textContent=num(p.open_orders||0);
+  productionFinishedToday.textContent=num(p.finished_today||0);
+  productionProgress.textContent=num(p.progress||0)+'%';
+  productionPlanned.textContent=num(p.planned||0);
+  productionDone.textContent=num(p.done||0);
+
+  const rows=filteredProductionOrders();
+  productionEmpty.classList.toggle('hidden',rows.length>0);
+  productionTable.innerHTML=rows.map(row=>`<tr>
+    <td><span class="production-order">${row.order}</span>${row.origin?`<div class="muted">${row.origin}</div>`:''}</td>
+    <td class="production-product">${row.product}</td>
+    <td class="num"><b>${num(row.quantity)}</b> ${row.uom}</td>
+    <td class="num">${num(row.produced)} ${row.uom}</td>
+    <td><span class="production-state ${productionStateClass(row)}">${row.status} · ${row.state_label}</span></td>
+    <td>${productionDate(row.date_start)}</td>
+    <td>${productionDate(row.date_finished)}</td>
+  </tr>`).join('');
+  productionMobileList.innerHTML=rows.map(row=>`<article class="production-mobile-card">
+    <div class="row"><span class="production-order">${row.order}</span><span class="production-state ${productionStateClass(row)}">${row.status}</span></div>
+    <div class="production-product" style="margin-top:10px">${row.product}</div>
+    <div class="meta">
+      <div><b>Cantidad</b><br>${num(row.quantity)} ${row.uom}</div>
+      <div><b>Producido</b><br>${num(row.produced)} ${row.uom}</div>
+      <div><b>Estado</b><br>${row.state_label}</div>
+      <div><b>Inicio</b><br>${productionDate(row.date_start)}</div>
+    </div>
+  </article>`).join('');
+}
+
 function setSyncState(state,message){
   syncDot.className='sync-dot'+(state==='error'?' error':'');
   syncText.textContent=message;
@@ -1116,7 +1223,7 @@ async function loadData(){
     DATA=await response.json();if(!response.ok)throw new Error(DATA.detail||'No fue posible consultar Odoo.');
     syncMeta.textContent=formatSyncMeta(DATA.generated_at,DATA.query_duration_ms);
     setSyncState('ok','Datos sincronizados');
-    productionProgress.textContent=num(DATA.production.progress)+'%';productionOrders.textContent=DATA.production.orders;productionPlanned.textContent=num(DATA.production.planned);productionDone.textContent=num(DATA.production.done);
+    renderProduction();
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
     renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();renderPriorities();
     historyCategory.innerHTML='<option value="TODOS">Todas las categorías</option>'+DATA.inventory.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
@@ -1142,6 +1249,12 @@ document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',
 document.querySelectorAll('[data-module]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.module));
 document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.open));
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
+productionSearch.addEventListener('input',renderProduction);
+document.querySelectorAll('[data-production-filter]').forEach(btn=>btn.onclick=()=>{
+  productionFilter=btn.dataset.productionFilter;
+  document.querySelectorAll('[data-production-filter]').forEach(item=>item.classList.toggle('active',item===btn));
+  renderProduction();
+});
 cardsBtn.onclick=()=>{productView='cards';productCards.classList.remove('hidden');tableContainer.classList.add('hidden');cardsBtn.classList.add('active');tableBtn.classList.remove('active');};
 tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');tableContainer.classList.remove('hidden');tableBtn.classList.add('active');cardsBtn.classList.remove('active');};
 document.getElementById('mobileRefresh').onclick=loadData;
