@@ -1,0 +1,34 @@
+CICE 12.2.1 — CORRECCIÓN DE PANTALLA SIN INFORMACIÓN
+======================================================
+
+CAUSA
+-----
+El nuevo detalle de Producción hacía consultas adicionales a Odoo.
+Si una de esas consultas fallaba o tardaba demasiado, se detenía toda
+la respuesta del tablero, por lo que Inventarios, Ventas y Producción
+quedaban en blanco.
+
+CORRECCIÓN
+----------
+- El detalle de Producción ya no puede detener todo CICE.
+- Se retiró un campo opcional de Odoo que podía variar por versión.
+- Se limitó la consulta detallada para hacerla más rápida.
+- Si el detalle falla, CICE muestra las métricas disponibles.
+- Inventario, Producción y Ventas cargan de forma independiente.
+- No modifica ningún dato de Odoo.
+
+PUBLICAR
+--------
+1. Reemplaza el contenido del repositorio con esta versión.
+2. GitHub Desktop:
+   Corregir carga del tablero CICE 12.2.1
+3. Commit to main.
+4. Push origin.
+5. Espera Deploy live.
+6. Abre:
+   https://cice-cocopops.onrender.com/actualizar-cice
+
+VERIFICAR
+---------
+https://cice-cocopops.onrender.com/api/health
+Debe mostrar "version": "12.2.1".

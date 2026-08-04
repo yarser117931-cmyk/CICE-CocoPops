@@ -62,10 +62,57 @@ class DashboardService:
             start = now.replace(hour=0, minute=0, second=0, microsecond=0)
             end = start + timedelta(days=1)
 
-            inventory, production, sales = await asyncio.gather(
+            results = await asyncio.gather(
                 build_inventory(self.odoo),
                 build_production(self.odoo, start, end),
                 build_sales(self.odoo, start, end),
+                return_exceptions=True,
+            )
+
+            inventory_result, production_result, sales_result = results
+
+            inventory = (
+                inventory_result
+                if not isinstance(inventory_result, Exception)
+                else {
+                    "global": {
+                        "products": 0,
+                        "critical": 0,
+                        "below_min": 0,
+                        "risk": 0,
+                        "available": 0,
+                        "coverage_pct": None,
+                    },
+                    "categories": [],
+                    "products": [],
+                    "error": str(inventory_result),
+                }
+            )
+            production = (
+                production_result
+                if not isinstance(production_result, Exception)
+                else {
+                    "orders": 0,
+                    "planned": 0,
+                    "done": 0,
+                    "producing": 0,
+                    "progress": 0,
+                    "open_orders": 0,
+                    "finished_today": 0,
+                    "details": [],
+                    "error": str(production_result),
+                }
+            )
+            sales = (
+                sales_result
+                if not isinstance(sales_result, Exception)
+                else {
+                    "total": 0,
+                    "orders": 0,
+                    "customers": 0,
+                    "invoiced_today": 0,
+                    "error": str(sales_result),
+                }
             )
 
             intelligence = build_intelligence(inventory, production, sales)
