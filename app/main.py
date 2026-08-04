@@ -1,6 +1,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from datetime import datetime, timedelta
 from time import perf_counter
 from pathlib import Path
@@ -40,7 +42,7 @@ odoo = OdooClient(settings)
 
 app = FastAPI(
     title="CICE Coco Pops",
-    version="12.2.1",
+    version="12.3.0",
 )
 
 app.mount(
@@ -109,7 +111,7 @@ async def actualizar_cice() -> HTMLResponse:
         localStorage.removeItem('cice-version');
         sessionStorage.clear();
       } finally {
-        location.replace('/?version=12.2.1&actualizado=' + Date.now());
+        location.replace('/?version=12.3.0&actualizado=' + Date.now());
       }
     })();
   </script>
@@ -127,7 +129,7 @@ async def actualizar_cice() -> HTMLResponse:
 async def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "version": "12.2.1",
+        "version": "12.3.0",
         "architecture": "modular-data-warehouse",
         "database_enabled": database_enabled(),
         "warehouse_enabled": warehouse_enabled(),
@@ -278,9 +280,25 @@ async def copilot(payload: dict[str, object]) -> dict[str, object]:
     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end = start + timedelta(days=1)
 
-    inventory = await build_inventory(odoo)
-    production = await build_production(odoo, start, end)
-    sales = await build_sales(odoo, start, end)
+    results = await asyncio.gather(
+        build_inventory(odoo),
+        build_production(odoo, start, end),
+        build_sales(odoo, start, end),
+        return_exceptions=True,
+    )
+    inventory_result, production_result, sales_result = results
+    inventory = inventory_result if not isinstance(inventory_result, Exception) else {
+        "global": {}, "categories": [], "products": [], "error": str(inventory_result)
+    }
+    production = production_result if not isinstance(production_result, Exception) else {
+        "orders": 0, "open_orders": 0, "finished_today": 0,
+        "planned": 0, "done": 0, "progress": 0, "details": [],
+        "error": str(production_result),
+    }
+    sales = sales_result if not isinstance(sales_result, Exception) else {
+        "total": 0, "orders": 0, "customers": 0,
+        "invoiced_today": 0, "details": [], "error": str(sales_result),
+    }
     priorities = build_ceo_priorities(inventory, production, sales)
 
     question = str(payload.get("question") or "")
@@ -306,9 +324,32 @@ async def dashboard() -> dict[str, object]:
     )
     end = start + timedelta(days=1)
 
-    inventory = await build_inventory(odoo)
-    production = await build_production(odoo, start, end)
-    sales = await build_sales(odoo, start, end)
+    results = await asyncio.gather(
+        build_inventory(odoo),
+        build_production(odoo, start, end),
+        build_sales(odoo, start, end),
+        return_exceptions=True,
+    )
+    inventory_result, production_result, sales_result = results
+
+    inventory = inventory_result if not isinstance(inventory_result, Exception) else {
+        "global": {
+            "products": 0, "critical": 0, "below_min": 0,
+            "risk": 0, "available": 0, "coverage_pct": None,
+        },
+        "categories": [], "products": [], "error": str(inventory_result),
+    }
+    production = production_result if not isinstance(production_result, Exception) else {
+        "orders": 0, "planned": 0, "done": 0, "producing": 0,
+        "progress": 0, "open_orders": 0, "finished_today": 0,
+        "details": [], "error": str(production_result),
+    }
+    sales = sales_result if not isinstance(sales_result, Exception) else {
+        "total": 0, "orders": 0, "customers": 0,
+        "pending_invoice": 0, "invoiced_today": 0,
+        "details": [], "error": str(sales_result),
+    }
+
     intelligence = build_intelligence(
         inventory,
         production,

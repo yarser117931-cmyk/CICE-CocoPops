@@ -1,0 +1,29 @@
+CICE 12.3 — VENTAS DETALLADAS Y COPILOTO FUNCIONAL
+====================================================
+
+CAMBIOS
+-------
+- Ventas muestra cliente, pedido, hora, estado de facturación y total.
+- Incluye buscador por cliente o pedido.
+- Vista adaptada para PC y móvil.
+- El Copiloto Ejecutivo ya responde al botón Preguntar y a las sugerencias.
+- El Copiloto muestra ventas por cliente y órdenes de producción.
+- Inventario, Producción y Ventas cargan de forma independiente.
+- No crea, modifica ni elimina datos en Odoo. Es solo consulta.
+
+PUBLICAR
+--------
+1. Descomprime este ZIP.
+2. Copia todo al repositorio CICE-CocoPops y reemplaza.
+3. GitHub Desktop:
+   Agregar ventas detalladas y corregir copiloto CICE 12.3
+4. Commit to main.
+5. Push origin.
+6. Espera Deploy live en Render.
+7. Abre una vez:
+   https://cice-cocopops.onrender.com/actualizar-cice
+
+VERIFICAR
+---------
+https://cice-cocopops.onrender.com/api/health
+Debe mostrar "version": "12.3.0".

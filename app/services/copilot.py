@@ -28,9 +28,9 @@ def answer_question(
     priorities: dict[str, Any],
 ) -> dict[str, Any]:
     q = _normalize(question.strip())
-    products = inventory["products"]
-    categories = inventory["categories"]
-    global_summary = inventory["global"]
+    products = inventory.get("products", [])
+    categories = inventory.get("categories", [])
+    global_summary = inventory.get("global", {})
 
     if not q:
         return {
@@ -148,29 +148,42 @@ def answer_question(
         }
 
     # Sales.
-    if "venta" in q or "vendido" in q or "facturado" in q:
+    if "venta" in q or "vendido" in q or "facturado" in q or "cliente" in q:
+        details = sales.get("details", [])
+        top_sales = sorted(
+            details,
+            key=lambda item: float(item.get("total") or 0),
+            reverse=True,
+        )[:10]
         return {
             "answer": (
                 f"Las ventas confirmadas de hoy suman {_money(float(sales.get('total') or 0))} "
                 f"en {sales.get('orders', 0)} pedidos y "
                 f"{sales.get('customers', 0)} clientes. "
-                f"Se han facturado {_money(float(sales.get('invoiced_today') or 0))}."
+                f"Se han facturado {_money(float(sales.get('invoiced_today') or 0))}. "
+                "Estas son las ventas de mayor importe."
             ),
-            "type": "SALES",
-            "items": [],
+            "type": "SALES_LIST",
+            "items": top_sales,
         }
 
     # Production status.
-    if "avance" in q or "ordenes de fabricacion" in q:
+    if (
+        "avance" in q
+        or "ordenes de fabricacion" in q
+        or "orden de produccion" in q
+        or "produccion" in q
+    ):
+        details = production.get("details", [])[:10]
         return {
             "answer": (
                 f"La producción de hoy registra {production.get('orders', 0)} órdenes, "
-                f"{production.get('planned', 0)} planeado, "
-                f"{production.get('done', 0)} terminado y "
+                f"{production.get('open_orders', 0)} abiertas, "
+                f"{production.get('finished_today', 0)} terminadas hoy y "
                 f"{production.get('progress', 0)}% de avance."
             ),
-            "type": "PRODUCTION",
-            "items": [],
+            "type": "PRODUCTION_LIST",
+            "items": details,
         }
 
     # Inventory summary.

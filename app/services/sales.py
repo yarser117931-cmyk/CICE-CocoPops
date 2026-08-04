@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -6,6 +5,25 @@ from typing import Any
 
 from app.helpers import relation_name
 from app.odoo import OdooClient
+
+
+def _sales_detail(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": int(item.get("id") or 0),
+        "order": str(item.get("name") or "—"),
+        "date": item.get("date_order"),
+        "customer": relation_name(item.get("partner_id")) or "Cliente no identificado",
+        "total": round(float(item.get("amount_total") or 0), 2),
+        "invoice_status": str(item.get("invoice_status") or ""),
+        "state": str(item.get("state") or ""),
+        "status": (
+            "FACTURADA"
+            if item.get("invoice_status") == "invoiced"
+            else "POR FACTURAR"
+            if item.get("invoice_status") == "to invoice"
+            else "SIN PENDIENTE"
+        ),
+    }
 
 
 async def build_sales(
@@ -27,6 +45,7 @@ async def build_sales(
                 ["state", "in", ["sale", "done"]],
             ],
             "fields": [
+                "id",
                 "name",
                 "date_order",
                 "partner_id",
@@ -34,43 +53,46 @@ async def build_sales(
                 "invoice_status",
                 "state",
             ],
-            "limit": 5000,
+            "limit": 1000,
             "order": "date_order desc",
         },
     )
 
+    details = [_sales_detail(item) for item in sales]
     customers = {
-        relation_name(item.get("partner_id"))
-        for item in sales
-        if relation_name(item.get("partner_id"))
+        item["customer"]
+        for item in details
+        if item["customer"] and item["customer"] != "Cliente no identificado"
     }
 
-    invoices = await client.call(
-        "account.move",
-        "search_read",
-        {
-            "domain": [
-                ["invoice_date", "=", today_str],
-                ["move_type", "=", "out_invoice"],
-                ["state", "=", "posted"],
-            ],
-            "fields": ["name", "amount_total"],
-            "limit": 5000,
-        },
-    )
+    invoices: list[dict[str, Any]] = []
+    invoice_warning = ""
+    try:
+        invoices = await client.call(
+            "account.move",
+            "search_read",
+            {
+                "domain": [
+                    ["invoice_date", "=", today_str],
+                    ["move_type", "=", "out_invoice"],
+                    ["state", "=", "posted"],
+                ],
+                "fields": ["name", "amount_total"],
+                "limit": 5000,
+            },
+        )
+    except Exception as error:
+        invoice_warning = str(error)
 
     return {
-        "total": round(
-            sum(float(item.get("amount_total") or 0) for item in sales),
-            2,
-        ),
-        "orders": len(sales),
+        "total": round(sum(item["total"] for item in details), 2),
+        "orders": len(details),
         "customers": len(customers),
         "pending_invoice": round(
             sum(
-                float(item.get("amount_total") or 0)
-                for item in sales
-                if item.get("invoice_status") == "to invoice"
+                item["total"]
+                for item in details
+                if item["invoice_status"] == "to invoice"
             ),
             2,
         ),
@@ -78,4 +100,6 @@ async def build_sales(
             sum(float(item.get("amount_total") or 0) for item in invoices),
             2,
         ),
+        "details": details,
+        "invoice_warning": invoice_warning,
     }

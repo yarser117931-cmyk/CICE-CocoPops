@@ -261,7 +261,7 @@ body{
   position:relative;min-height:calc(100vh - 82px);
   background:
     linear-gradient(90deg,#fffdfb 0%,#fffdfb 24%,rgba(255,253,251,.96) 34%,rgba(255,253,251,.25) 61%,rgba(255,253,251,0) 76%),
-    url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.1') center right/cover no-repeat;
+    url('/static/cocopops-fashion-mall-hero.jpg?v=12.3.0') center right/cover no-repeat;
   overflow:hidden;padding:56px 34px 34px;
   display:flex;flex-direction:column;justify-content:space-between
 }
@@ -346,7 +346,7 @@ body{
     min-height:calc(100vh - 68px);padding:30px 16px 20px;
     background:
       linear-gradient(180deg,rgba(255,253,251,.98) 0%,rgba(255,253,251,.88) 34%,rgba(255,253,251,.08) 59%,rgba(72,17,35,.24) 100%),
-      url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.1') 67% center/cover no-repeat
+      url('/static/cocopops-fashion-mall-hero.jpg?v=12.3.0') 67% center/cover no-repeat
   }
   .hero-copy{max-width:100%}
   .hero-quote{font-size:42px;max-width:310px}
@@ -378,7 +378,7 @@ body{
   justify-content:flex-start;
   background:
     linear-gradient(90deg,#fffdfb 0%,#fffdfb 22%,rgba(255,253,251,.92) 34%,rgba(255,253,251,.18) 60%,rgba(255,253,251,0) 77%),
-    url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.1') center right/cover no-repeat;
+    url('/static/cocopops-fashion-mall-hero.jpg?v=12.3.0') center right/cover no-repeat;
 }
 .hero-copy{max-width:520px}
 .hero-quote{font-size:clamp(38px,4.1vw,62px);line-height:.98}
@@ -406,7 +406,7 @@ body{
     padding:22px 14px 18px;
     background:
       linear-gradient(180deg,rgba(255,253,251,.98) 0%,rgba(255,253,251,.9) 34%,rgba(255,253,251,.2) 58%,rgba(72,17,35,.3) 100%),
-      url('/static/cocopops-fashion-mall-hero.jpg?v=12.2.1') 72% center/cover no-repeat;
+      url('/static/cocopops-fashion-mall-hero.jpg?v=12.3.0') 72% center/cover no-repeat;
   }
   .hero-quote{font-size:36px;max-width:290px}
   .hero-subtitle{font-size:14px;max-width:280px}
@@ -443,10 +443,34 @@ body{
   #productionView .grid .card:last-child{grid-column:1/-1}
 }
 
+
+/* ===== VENTAS DETALLADAS 12.3 ===== */
+.sales-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:16px 0}
+.sales-search{width:min(360px,100%);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.sales-table{width:100%;border-collapse:collapse}
+.sales-table th,.sales-table td{padding:13px 12px;border-bottom:1px solid var(--line);text-align:left}
+.sales-table th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sales-table .num{text-align:right}
+.sales-status{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
+.sales-status.invoiced{background:#dcfce7;color:#166534}
+.sales-status.pending{background:#fef3c7;color:#92400e}
+.sales-status.other{background:#e5e7eb;color:#374151}
+.sales-mobile-list{display:none;gap:10px}
+.sales-mobile-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}
+.sales-mobile-card .row{display:flex;justify-content:space-between;gap:12px}
+.sales-mobile-card .customer{font-weight:900;margin:8px 0}
+.sales-empty{text-align:center;color:var(--muted);padding:24px}
+@media(max-width:780px){
+  .sales-desktop-table{display:none}
+  .sales-mobile-list{display:grid}
+  .sales-toolbar{align-items:stretch;flex-direction:column}
+  .sales-search{width:100%}
+}
+
 </style>
 
-<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=12.2.1">
-<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=12.2.1">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=12.3.0">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png?v=12.3.0">
 <meta name="theme-color" content="#861f41">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -457,10 +481,10 @@ body{
 <div class="shell">
   <aside class="sidebar">
     <div class="logo-wrap">
-      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=12.2.1" alt="Logotipo Coco Pops">
+      <img class="brand-logo-img" src="/static/cocopops-logo.png?v=12.3.0" alt="Logotipo Coco Pops">
       <div>
         <div class="brand-title">CICE</div>
-        <div class="brand-sub">Solo consulta · Powered by Odoo · CICE 12.2.1</div>
+        <div class="brand-sub">Solo consulta · Powered by Odoo · CICE 12.3</div>
       </div>
     </div>
     <div class="nav-label">Centro ejecutivo</div>
@@ -670,6 +694,24 @@ body{
           <article class="card"><div class="eyebrow">Clientes</div><div class="big" id="salesCustomers">0</div><div class="muted">Atendidos hoy</div></article>
           <article class="card"><div class="eyebrow">Facturado</div><div class="big" id="invoiced">$0</div><div class="muted">Facturación publicada hoy</div></article>
         </section>
+
+        <article class="card" style="margin-top:16px">
+          <div class="eyebrow">Detalle comercial</div>
+          <h2>Clientes y total por venta</h2>
+          <p class="muted">Pedidos confirmados durante el día, ordenados del más reciente al más antiguo.</p>
+          <div class="sales-toolbar">
+            <input id="salesSearch" class="sales-search" type="search" placeholder="Buscar cliente o pedido...">
+            <div class="muted" id="salesDetailCount">0 ventas</div>
+          </div>
+          <div class="table-wrap sales-desktop-table">
+            <table class="sales-table">
+              <thead><tr><th>Pedido</th><th>Cliente</th><th>Hora</th><th>Estado</th><th class="num">Total</th></tr></thead>
+              <tbody id="salesTable"></tbody>
+            </table>
+          </div>
+          <div id="salesMobileList" class="sales-mobile-list"></div>
+          <div id="salesEmpty" class="sales-empty hidden">No hay ventas con esta búsqueda.</div>
+        </article>
       </section>
 
 
@@ -1074,6 +1116,12 @@ function copilotItemsHtml(items){
       ${item.available!==undefined?`<div>Disponible: ${num(item.available)} ${item.uom||''}</div>`:''}
       ${item.minimum!==undefined?`<div>Mínimo: ${num(item.minimum)} ${item.uom||''}</div>`:''}
       ${item.missing!==undefined?`<div>Faltante: ${num(item.missing)} ${item.uom||''}</div>`:''}
+      ${item.customer?`<div><b>Cliente:</b> ${item.customer}</div>`:''}
+      ${item.total!==undefined?`<div><b>Total:</b> ${money(item.total)}</div>`:''}
+      ${item.order?`<div><b>Orden:</b> ${item.order}</div>`:''}
+      ${item.product?`<div><b>Producto:</b> ${item.product}</div>`:''}
+      ${item.quantity!==undefined?`<div><b>Cantidad:</b> ${num(item.quantity)} ${item.uom||''}</div>`:''}
+      ${item.state_label?`<div><b>Estado:</b> ${item.state_label}</div>`:''}
     </div>`).join('')}</div>`;
 }
 async function askCopilot(question){
@@ -1200,6 +1248,45 @@ function renderProduction(){
   </article>`).join('');
 }
 
+
+function salesStatusClass(row){
+  if(row.status==='FACTURADA')return 'invoiced';
+  if(row.status==='POR FACTURAR')return 'pending';
+  return 'other';
+}
+function salesTime(value){
+  if(!value)return '—';
+  const date=new Date(String(value).replace(' ','T')+'Z');
+  return Number.isNaN(date.getTime())?'—':date.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+}
+function filteredSales(){
+  const query=(salesSearch.value||'').trim().toLowerCase();
+  const rows=(DATA&&DATA.sales&&DATA.sales.details)||[];
+  if(!query)return rows;
+  return rows.filter(row=>
+    String(row.customer||'').toLowerCase().includes(query)||
+    String(row.order||'').toLowerCase().includes(query)||
+    String(row.status||'').toLowerCase().includes(query)
+  );
+}
+function renderSales(){
+  const rows=filteredSales();
+  salesDetailCount.textContent=`${rows.length} venta${rows.length===1?'':'s'}`;
+  salesEmpty.classList.toggle('hidden',rows.length>0);
+  salesTable.innerHTML=rows.map(row=>`<tr>
+    <td><b>${row.order}</b></td>
+    <td>${row.customer}</td>
+    <td>${salesTime(row.date)}</td>
+    <td><span class="sales-status ${salesStatusClass(row)}">${row.status}</span></td>
+    <td class="num"><b>${money(row.total)}</b></td>
+  </tr>`).join('');
+  salesMobileList.innerHTML=rows.map(row=>`<article class="sales-mobile-card">
+    <div class="row"><b>${row.order}</b><span class="sales-status ${salesStatusClass(row)}">${row.status}</span></div>
+    <div class="customer">${row.customer}</div>
+    <div class="row"><span>${salesTime(row.date)}</span><b>${money(row.total)}</b></div>
+  </article>`).join('');
+}
+
 function setSyncState(state,message){
   syncDot.className='sync-dot'+(state==='error'?' error':'');
   syncText.textContent=message;
@@ -1224,6 +1311,7 @@ async function loadData(){
     syncMeta.textContent=formatSyncMeta(DATA.generated_at,DATA.query_duration_ms);
     setSyncState('ok','Datos sincronizados');
     renderProduction();
+    renderSales();
     salesTotal.textContent=money(DATA.sales.total);salesOrders.textContent=DATA.sales.orders;salesCustomers.textContent=DATA.sales.customers;invoiced.textContent=money(DATA.sales.invoiced_today);
     renderCategoryNav();renderCategoryCards();renderInventory();renderAlerts();renderHome();renderPriorities();
     historyCategory.innerHTML='<option value="TODOS">Todas las categorías</option>'+DATA.inventory.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
@@ -1250,6 +1338,7 @@ document.querySelectorAll('[data-module]').forEach(btn=>btn.onclick=()=>openModu
 document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>openModule(btn.dataset.open));
 searchInput.addEventListener('input',renderProducts);statusFilter.addEventListener('change',renderProducts);
 productionSearch.addEventListener('input',renderProduction);
+salesSearch.addEventListener('input',renderSales);
 document.querySelectorAll('[data-production-filter]').forEach(btn=>btn.onclick=()=>{
   productionFilter=btn.dataset.productionFilter;
   document.querySelectorAll('[data-production-filter]').forEach(item=>item.classList.toggle('active',item===btn));
@@ -1259,6 +1348,13 @@ cardsBtn.onclick=()=>{productView='cards';productCards.classList.remove('hidden'
 tableBtn.onclick=()=>{productView='table';productCards.classList.add('hidden');tableContainer.classList.remove('hidden');tableBtn.classList.add('active');cardsBtn.classList.remove('active');};
 document.getElementById('mobileRefresh').onclick=loadData;
 document.getElementById('refreshNow').onclick=loadData;
+copilotForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  askCopilot(copilotQuestion.value);
+});
+document.querySelectorAll('[data-question]').forEach(button=>{
+  button.addEventListener('click',()=>askCopilot(button.dataset.question));
+});
 loadData();setInterval(loadData,300000);
 </script>
 </body>
